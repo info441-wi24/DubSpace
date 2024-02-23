@@ -1,8 +1,53 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  margin: 0px;
+  font-family: "IBM Plex Sans"
 }
 
-a {
-  color: #00B7FF;
+main {
+  width: 80%;
+  margin: auto;
+}
+
+header, nav, header div {
+  display: flex;
+  align-items: center;
+}
+
+header, nav {
+  justify-content: space-around;
+}
+
+header {
+  background-color: lightsteelblue;
+  position: sticky;
+  top: 0px;
+  height: 15vh;
+}
+
+header img {
+  margin: 0px;
+  margin-right: 1.5vw;
+  height: 8vh;
+}
+
+nav input {
+  height: 35px;
+  width: 35vw;
+}
+
+button {
+  font-weight: bold;
+  font-size: 1vw;
+  margin: 1%;
+  width: 20%;
+  cursor: pointer;
+  text-align: center;
+}
+
+button:hover {
+  background-color: antiquewhite;
+}
+
+h1 {
+  font-size: 30px;
 }

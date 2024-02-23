@@ -1,13 +1,44 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Express</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://fonts.googleapis.com/css?family=IBM Plex Sans' rel='stylesheet'>
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="javascripts/index.js"></script>
+  <title>DubSpace</title>
 </head>
-
 <body>
-  <h1>Express</h1>
-  <p>Welcome to Express</p>
-</body>
+  <header>
+    <div>
+      <img src="img/uw.png" alt="uw logo">
+      <h1>DubSpace</h1>
+    </div>
+    <nav>
+      <input id="search-term" type="text">
+      <button id="serach-btn" disabled>Search</button>
+      <button id="home-btn">Home</button>
+      <button id="post-btn">Post</button>
+    </nav>
+  </header>
 
+  <main>
+    <article id="post-data">
+      <!-- Home View -->
+      <section id="home">
+        <h1 id="description">Welcome!</h1>
+      </section>
+
+      <!-- User View -->
+      <section id="user" class="hidden">
+      </section>
+
+      <!-- New Post View -->
+      <section id="new" class="hidden">
+      </section>
+    </article>
+
+    <h2 id="error" class="hidden">An error has occurred, please try again later!</h2>
+  </main>
+</body>
 </html>

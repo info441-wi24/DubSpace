@@ -9,7 +9,7 @@ Our audience may want to use our application, as it acts like a central reposito
 As fellow UW students, we are the ones taking the classes and looking all over the internet for reviews on the curriculum, courseload, the professor, and other general criticisms. It takes time for a user to look through all the different sites that may host this information, and for some classes and professors, they might not even have this information stored yet. Making a centralized platform for class reviews at UW will immensely help users researching and looking for classes to take. As developers, we want to be able to help UW students save their time, and a single platform like this will enable that.
 
 ## Technical Description
-![Architectural_Diagram](img/architectural_diagram.png)
+![Architectural_Diagram](public/img/architectural_diagram.png)
 
 ## User Stories
 Priority | User | Description | Technical Implementation
