@@ -15,14 +15,14 @@ router.get('/', async(req, res) => {
         const postData = await Promise.all(
             posts.map(async (post) => {
                 try {
-                    const { url, description, search } = post;
+                    const { username, post: content, hashtag, likes, created_date, _id } = post;
                     return {
-                        username: post.username,
-                        post: post.post,
-                        hashtag: post.hashtag,
-                        post: post.likes,
-                        created_date: post.created_date,
-                        id: post._id
+                        username,
+                        content,
+                        hashtag,
+                        likes,
+                        created_date,
+                        id: _id
                     };
                 } catch (error) {
                     return {
@@ -65,6 +65,9 @@ router.post('/', async(req, res) => {
     }
 });
 
+
+// TODO: Make likes, unlike, comments work for when like is a Number/INT
+// instead of an array of strings.
 router.post('/like', async(req, res) => {
     try {
         if (!req.session.isAuthenticated || !req.session.account.username) {

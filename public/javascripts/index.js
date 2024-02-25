@@ -4,7 +4,7 @@ function init() {
   allPost();
   document.querySelector("#search-term").addEventListener("input", searchBar);
   document.getElementById("home-btn").addEventListener("click", homeButton);
-  document.getElementById("post-btn").addEventListener("click", newYip);
+  document.getElementById("post-btn").addEventListener("click", postCard);
 }
 
 async function allPost() {
@@ -23,6 +23,15 @@ async function allPost() {
   }
 }
 
+// TODO: Handle searchbar functions, currently just a dummy function to avoid error
+function searchBar(event) {
+    // Dummy implementation
+    console.log("Search bar input:", event.target.value);
+}
+
+function homeButton() {
+  location.reload();
+}
 function postCard(data) {
   let container = document.createElement("article")
   container.classList.add("card")
@@ -42,4 +51,9 @@ function postCard(data) {
 
   indivName.addEventListener("click", userPost)
   return container
+}
+
+// TODO: Implement viewing a post when a user clicks on a post
+function userPost() {
+ console.log("TODO!");
 }
