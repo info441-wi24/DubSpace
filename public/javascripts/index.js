@@ -2,19 +2,24 @@ window.addEventListener("load", init);
 
 function init() {
   allPost();
-  qs("#search-term").addEventListener("input", searchBar);
+  document.querySelector("#search-term").addEventListener("input", searchBar);
   document.getElementById("home-btn").addEventListener("click", homeButton);
   document.getElementById("post-btn").addEventListener("click", newYip);
 }
 
 async function allPost() {
-  document.getElementById("description").innerText = "Loading..."
-  let postsJson = await fetchJSON(`api/posts`)
+  document.getElementById("description").innerText = "Loading...";
+  try {
+      let response = await fetch(`api/posts`);
+      let postsJson = await response.json();
 
-  for (let i = 0; i < postsJson.length; i++) {
-    let specificData =postsJson["posts"][i]
-    let container = postCard(specificData)
-    document.getElementById("home").appendChild(container)
+      for (let i = 0; i < postsJson.length; i++) {
+          let specificData = postsJson["posts"][i];
+          let container = postCard(specificData);
+          document.getElementById("home").appendChild(container);
+      }
+  } catch (error) {
+      console.error("Error fetching posts:", error);
   }
 }
 
