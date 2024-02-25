@@ -13,11 +13,12 @@ function init() {
 async function allPost() {
   document.getElementById("description").innerText = "Loading...";
   try {
+    // Can use fetchJSON, need to import it from utils
       let response = await fetch(`api/posts`);
       let postsJson = await response.json();
 
       for (let i = 0; i < postsJson.length; i++) {
-          let specificData = postsJson["posts"][i];
+          let specificData = postsJson[i];
           let container = postCard(specificData);
           document.getElementById("home").appendChild(container);
       }
