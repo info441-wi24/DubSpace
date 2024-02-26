@@ -15,10 +15,10 @@ router.get('/', async(req, res) => {
         const postData = await Promise.all(
             posts.map(async (post) => {
                 try {
-                    const { username, post: content, hashtag, likes, created_date, _id } = post;
+                    const { username, post: postContent, hashtag, likes, created_date, _id } = post;
                     return {
                         username,
-                        content,
+                        post: postContent,
                         hashtag,
                         likes,
                         created_date,
@@ -68,6 +68,7 @@ router.post('/', async(req, res) => {
 
 // TODO: Make likes, unlike, comments work for when like is a Number/INT
 // instead of an array of strings.
+/*
 router.post('/like', async(req, res) => {
     try {
         if (!req.session.isAuthenticated || !req.session.account.username) {
@@ -142,5 +143,5 @@ router.delete('/', async(req, res) => {
         console.error(error)
         return res.status(500).json({ status: "error", error: error.message });
     }
-})
+}) */
 export default router;

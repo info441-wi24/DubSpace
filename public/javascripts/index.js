@@ -49,6 +49,10 @@ function postCard(data) {
   firstDiv.appendChild(indivName)
 
   let hashtag = document.createElement("p")
+  //debug
+  if (!data["post"]) {
+    data["post"] = "No post available";
+  }
   hashtag.textContent = data["post"] + " #" + data["hashtag"]
   firstDiv.appendChild(hashtag)
   container.appendChild(firstDiv)
