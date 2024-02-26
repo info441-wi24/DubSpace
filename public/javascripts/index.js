@@ -24,6 +24,8 @@ async function allPost() {
       }
   } catch (error) {
       console.error("Error fetching posts:", error);
+      const errorResponse = document.getElementById('error');
+      ErrorMessages.classList.toggle('hidden');
   }
 }
 
@@ -49,12 +51,16 @@ function postCard(data) {
   firstDiv.appendChild(indivName)
 
   let hashtag = document.createElement("p")
+  let extraInfo = document.createElement("p")
+  extraInfo.classList.add("user-time")
   //debug
   if (!data["post"]) {
     data["post"] = "No post available";
   }
+  extraInfo.textContent = data["username"] + " posted on: " + data["created_date"];
   hashtag.textContent = data["post"] + " #" + data["hashtag"]
   firstDiv.appendChild(hashtag)
+  firstDiv.appendChild(extraInfo)
   container.appendChild(firstDiv)
 
   indivName.addEventListener("click", userPost)
@@ -65,6 +71,7 @@ function postCard(data) {
 function userPost() {
  console.log("TODO!");
 }
+
 /* old code (using function in identity.js instead)
 async function handleLogin() {
   try {

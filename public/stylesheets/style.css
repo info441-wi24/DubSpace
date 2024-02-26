@@ -56,3 +56,12 @@ h1 {
 #identity_div a:first-child {
   margin-right: 10px;
 }
+
+.hidden {
+  display: none;
+}
+
+.user-time{
+  color: lightskyblue;
+  font-size: 11.5px;
+}
