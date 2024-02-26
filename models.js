@@ -6,10 +6,7 @@ let models = {};
 const connectToDatabase = async () => {
   try {
     console.log("Connecting to MongoDB");
-    await mongoose.connect("mongodb+srv://12345:12345@cluster0.vcxzg34.mongodb.net/", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect("mongodb+srv://DubSpaceUser:DubSpacePassword@cluster0.j0lkezc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
     console.log("Connected to MongoDB");
 
     // Define the Post schema and model
