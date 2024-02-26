@@ -32,7 +32,8 @@ header img {
 
 nav input {
   height: 35px;
-  width: 35vw;
+  width: 40vw;
+  border-radius: 5px;
 }
 
 button {
@@ -50,4 +51,8 @@ button:hover {
 
 h1 {
   font-size: 30px;
+}
+
+#identity_div a:first-child {
+  margin-right: 10px;
 }

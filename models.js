@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 
 let models = {};
@@ -23,7 +22,7 @@ const connectToDatabase = async () => {
     const commentSchema = new mongoose.Schema({
       username: String,
       comment: String,
-      post: mongoose.Schema.Types.ObjectId,
+      post: {type: mongoose.Schema.Types.ObjectId, ref: "Post"},
       created_date: Date
     })
 

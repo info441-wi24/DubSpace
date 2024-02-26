@@ -1,13 +1,13 @@
 // import { login as authLogin } from './auth.js'; Needa set up auth.js
 
-window.addEventListener("load", init);
+//window.addEventListener("load", init);
 
-function init() {
+async function init() {
+  await loadIdentity();
   allPost();
   document.querySelector("#search-term").addEventListener("input", searchBar);
   document.getElementById("home-btn").addEventListener("click", homeButton);
   document.getElementById("post-btn").addEventListener("click", postCard);
-  //document.getElementById("login-btn").addEventListener("click", handleLogin);
 }
 
 async function allPost() {
@@ -61,7 +61,7 @@ function postCard(data) {
 function userPost() {
  console.log("TODO!");
 }
-/* Can use once auth.js or whatever for auth is setup
+/* old code (using function in identity.js instead)
 async function handleLogin() {
   try {
     await authLogin();
