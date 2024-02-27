@@ -51,11 +51,22 @@ router.post('/', async(req, res) => {
         })
     }
     try {
+        const currentTime = Date.now();
+        const currentDate = new Date(currentTime);
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        const formattedDate = currentDate.toLocaleString('en-US', options);
+        console.log(formattedDate)
         const newPost = new req.models.Post({
             username: req.session.account.username,
             post: req.body.post,
             hashtag: req.body.hashtag,
-            created_date: Date.now()
+            created_date: formattedDate
         })
         await newPost.save()
         res.json({ status: 'success'});

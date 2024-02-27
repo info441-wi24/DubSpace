@@ -39,8 +39,9 @@ async function allPost() {
   } catch (error) {
       console.error("Error fetching posts:", error);
       const errorResponse = document.getElementById('error');
-      document.getElementById("description").innerText = errorResponse;
-      ErrorMessages.classList.toggle('hidden');
+      let errordesc = document.getElementById("description");
+      errordesc.innerText = errorResponse;
+      errordesc.classList.toggle('hidden');
   }
 }
 
@@ -66,24 +67,34 @@ function postCard(data) {
   let firstDiv = document.createElement("div")
   firstDiv.appendChild(indivName)
 
-  let hashtag = document.createElement("p")
   let extraInfo = document.createElement("p")
   extraInfo.classList.add("user-time")
   //debug
   if (!data["post"]) {
     data["post"] = "No post available";
   }
-  extraInfo.textContent = data["username"] + " posted on: " + data["created_date"];
+  let tempTime = data["created_date"];
+  let currDate = new Date(tempTime);
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+  };
+  let formattedDate = currDate.toLocaleDateString('en-US', options)
+  extraInfo.textContent = data["username"] + " posted on " + formattedDate;
   let postContent = document.createElement("p");
   postContent.textContent = data["post"];
   firstDiv.appendChild(postContent);
 
-  if (Array.isArray(data["hashtag"]) && data["hashtag"].length > 0) {
-    data["hashtag"].forEach(function(tag) {
-      let individualTag = document.createElement("p");
-      individualTag.textContent = '#' + tag;
-      firstDiv.appendChild(individualTag);
-    });
+  const hashTagString = data["hashtag"][0];
+  const hashTagArr = hashTagString.split(',');
+  if (Array.isArray(hashTagArr) && hashTagArr.length > 0) {
+      let allTags = document.createElement("p");
+      allTags.textContent = hashTagArr.map(tag => '#' + tag.trim()).join(' ');
+      allTags.style.fontStyle = "italic";
+      firstDiv.appendChild(allTags);
   }
 
   firstDiv.appendChild(extraInfo)
