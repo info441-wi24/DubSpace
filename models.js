@@ -12,7 +12,7 @@ const connectToDatabase = async () => {
     const postSchema = new mongoose.Schema({
       username: String,
       post: String,
-      hashtag: String,
+      hashtag: [String],
       likes: Number,
       created_date: Date
     });

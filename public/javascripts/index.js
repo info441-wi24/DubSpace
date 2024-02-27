@@ -7,7 +7,20 @@ async function init() {
   allPost();
   document.querySelector("#search-term").addEventListener("input", searchBar);
   document.getElementById("home-btn").addEventListener("click", homeButton);
-  document.getElementById("post-btn").addEventListener("click", postCard);
+  document.getElementById("post-btn").addEventListener("click", async function() {
+    try {
+      const identityResponse = await fetch('api/users/myIdentity');
+      const identityInfo = await identityResponse.json();
+
+      if (identityInfo.status === "loggedin") {
+        window.location.href = 'createpost.html';
+      } else {
+        alert("Must be logged in to create posts!")
+      }
+    } catch (error) {
+      console.error("logging in", error)
+    }
+  });
 }
 
 async function allPost() {
@@ -61,8 +74,18 @@ function postCard(data) {
     data["post"] = "No post available";
   }
   extraInfo.textContent = data["username"] + " posted on: " + data["created_date"];
-  hashtag.textContent = data["post"] + " #" + data["hashtag"]
-  firstDiv.appendChild(hashtag)
+  let postContent = document.createElement("p");
+  postContent.textContent = data["post"];
+  firstDiv.appendChild(postContent);
+
+  if (Array.isArray(data["hashtag"]) && data["hashtag"].length > 0) {
+    data["hashtag"].forEach(function(tag) {
+      let individualTag = document.createElement("p");
+      individualTag.textContent = '#' + tag;
+      firstDiv.appendChild(individualTag);
+    });
+  }
+
   firstDiv.appendChild(extraInfo)
   container.appendChild(firstDiv)
 

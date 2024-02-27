@@ -22,6 +22,7 @@ header {
   position: sticky;
   top: 0px;
   height: 15vh;
+  z-index: 1000;
 }
 
 header img {
@@ -34,6 +35,18 @@ nav input {
   height: 35px;
   width: 40vw;
   border-radius: 5px;
+}
+
+.newhomebtn {
+  background-color: grey;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%
 }
 
 button {
@@ -70,4 +83,8 @@ article {
   margin: 1em;
   padding: 1em;
   filter: drop-shadow(1px 1px grey);
+}
+
+.newhomebtn:hover {
+  background-color: darkgrey;
 }
