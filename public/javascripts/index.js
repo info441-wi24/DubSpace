@@ -1,21 +1,58 @@
-window.addEventListener("load", init);
+// import { login as authLogin } from './auth.js'; Needa set up auth.js
 
-function init() {
+//window.addEventListener("load", init);
+
+async function init() {
+  await loadIdentity();
   allPost();
-  qs("#search-term").addEventListener("input", searchBar);
+  document.querySelector("#search-term").addEventListener("input", searchBar);
   document.getElementById("home-btn").addEventListener("click", homeButton);
-  document.getElementById("post-btn").addEventListener("click", newYip);
+  document.getElementById("post-btn").addEventListener("click", async function() {
+    try {
+      const identityResponse = await fetch('api/users/myIdentity');
+      const identityInfo = await identityResponse.json();
+
+      if (identityInfo.status === "loggedin") {
+        window.location.href = 'createpost.html';
+      } else {
+        alert("Must be logged in to create posts!")
+      }
+    } catch (error) {
+      console.error("logging in", error)
+    }
+  });
 }
 
 async function allPost() {
-  document.getElementById("description").innerText = "Loading..."
-  let postsJson = await fetchJSON(`api/posts`)
+  document.getElementById("description").innerText = "Loading...";
+  try {
+    // Can use fetchJSON, need to import it from utils
+      let response = await fetch(`api/posts`);
+      let postsJson = await response.json();
 
-  for (let i = 0; i < postsJson.length; i++) {
-    let specificData =postsJson["posts"][i]
-    let container = postCard(specificData)
-    document.getElementById("home").appendChild(container)
+      for (let i = 0; i < postsJson.length; i++) {
+          let specificData = postsJson[i];
+          let container = postCard(specificData);
+          document.getElementById("home").appendChild(container);
+      }
+      document.getElementById("description").innerText = "Welcome!"; // takes out loading text after posts load
+  } catch (error) {
+      console.error("Error fetching posts:", error);
+      const errorResponse = document.getElementById('error');
+      let errordesc = document.getElementById("description");
+      errordesc.innerText = errorResponse;
+      errordesc.classList.toggle('hidden');
   }
+}
+
+// TODO: Handle searchbar functions, currently just a dummy function to avoid error
+function searchBar(event) {
+    // Dummy implementation
+    console.log("Search bar input:", event.target.value);
+}
+
+function homeButton() {
+  window.location.href = '/';
 }
 
 function postCard(data) {
@@ -30,11 +67,44 @@ function postCard(data) {
   let firstDiv = document.createElement("div")
   firstDiv.appendChild(indivName)
 
-  let hashtag = document.createElement("p")
-  hashtag.textContent = data["post"] + " #" + data["hashtag"]
-  firstDiv.appendChild(hashtag)
+  let extraInfo = document.createElement("p")
+  extraInfo.classList.add("user-time")
+  //debug
+  if (!data["post"]) {
+    data["post"] = "No post available";
+  }
+  let tempTime = data["created_date"];
+  let currDate = new Date(tempTime);
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+  };
+  let formattedDate = currDate.toLocaleDateString('en-US', options)
+  extraInfo.textContent = data["username"] + " posted on " + formattedDate;
+  let postContent = document.createElement("p");
+  postContent.textContent = data["post"];
+  firstDiv.appendChild(postContent);
+
+  const hashTagString = data["hashtag"][0];
+  const hashTagArr = hashTagString.split(',');
+  if (Array.isArray(hashTagArr) && hashTagArr.length > 0) {
+      let allTags = document.createElement("p");
+      allTags.textContent = hashTagArr.map(tag => '#' + tag.trim()).join(' ');
+      allTags.style.fontStyle = "italic";
+      firstDiv.appendChild(allTags);
+  }
+
+  firstDiv.appendChild(extraInfo)
   container.appendChild(firstDiv)
 
   indivName.addEventListener("click", userPost)
   return container
+}
+
+// TODO: Implement viewing a post when a user clicks on a post
+function userPost() {
+ console.log("TODO!");
 }

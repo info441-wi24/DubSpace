@@ -1,6 +1,9 @@
 # Group 6 - DubSpace
 ***Members: Ken Huang, Nic Chin, Benny Po***
 
+## Project MVP Update
+*So far, we've implemented functionalities such as getting all the posts, being able to post a post, user auth and logging in, and navigating to your profile page. We plan to continue implementing functionalities such as liking and commenting on posts, adding more hashtag functionality, separating post content into class title/professor/rating/etc., and adding any external APIs to display additional information.*
+
 ## Project Description
 In this project, our target audience is mostly UW students. We envision that students who are looking to get other students’ opinions on classes they are interested in taking, and gain additional insight into the class from students who have previously taken the class will find our application useful. Students who wish to share their experience on a course they took will also likely have an interest in using our application.
 

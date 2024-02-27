@@ -1,19 +1,40 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
-let models = {}
+let models = {};
 
-console.log('connecting to mongodb')
-await mongoose.connect("")
-console.log('successfully connected to mongodb')
+const connectToDatabase = async () => {
+  try {
+    console.log("Connecting to MongoDB");
+    await mongoose.connect("mongodb+srv://DubSpaceUser:DubSpacePassword@cluster0.j0lkezc.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0");
+    console.log("Connected to MongoDB");
 
-const postSchema = new mongoose.Schema({
-  username: String,
-  post: String,
-  hashtag: String,
-  likes: Number,
-  date: Date
-})
+    // Define the Post schema and model
+    const postSchema = new mongoose.Schema({
+      username: String,
+      post: String,
+      hashtag: [String],
+      likes: Number,
+      created_date: Date
+    });
 
-models.Post = mongoose.model('Post', postSchema)
+    models.Post = mongoose.model('Post', postSchema);
 
-export default models
+    const commentSchema = new mongoose.Schema({
+      username: String,
+      comment: String,
+      post: {type: mongoose.Schema.Types.ObjectId, ref: "Post"},
+      created_date: Date
+    })
+
+    models.Comment = mongoose.model('Comment', commentSchema);
+
+    console.log("Mongoose models created");
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error.message);
+  }
+};
+
+connectToDatabase();
+
+export default models;
+

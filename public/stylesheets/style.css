@@ -22,6 +22,7 @@ header {
   position: sticky;
   top: 0px;
   height: 15vh;
+  z-index: 1000;
 }
 
 header img {
@@ -32,7 +33,20 @@ header img {
 
 nav input {
   height: 35px;
-  width: 35vw;
+  width: 40vw;
+  border-radius: 5px;
+}
+
+.newhomebtn {
+  background-color: grey;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%
 }
 
 button {
@@ -50,4 +64,27 @@ button:hover {
 
 h1 {
   font-size: 30px;
+}
+
+#identity_div a:first-child {
+  margin-right: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.user-time{
+  color: lightskyblue;
+  font-size: 11.5px;
+}
+
+article {
+  margin: 1em;
+  padding: 1em;
+  filter: drop-shadow(1px 1px grey);
+}
+
+.newhomebtn:hover {
+  background-color: darkgrey;
 }
