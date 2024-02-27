@@ -38,8 +38,9 @@ function searchBar(event) {
 }
 
 function homeButton() {
-  location.reload();
+  window.location.href = '/';
 }
+
 function postCard(data) {
   let container = document.createElement("article")
   container.classList.add("card")
