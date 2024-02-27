@@ -22,9 +22,11 @@ async function allPost() {
           let container = postCard(specificData);
           document.getElementById("home").appendChild(container);
       }
+      document.getElementById("description").innerText = "Welcome!"; // takes out loading text after posts load
   } catch (error) {
       console.error("Error fetching posts:", error);
       const errorResponse = document.getElementById('error');
+      document.getElementById("description").innerText = errorResponse;
       ErrorMessages.classList.toggle('hidden');
   }
 }
@@ -71,12 +73,3 @@ function postCard(data) {
 function userPost() {
  console.log("TODO!");
 }
-
-/* old code (using function in identity.js instead)
-async function handleLogin() {
-  try {
-    await authLogin();
-  } catch (error) {
-    console.log("error!", error.message);
-  }
-} */
