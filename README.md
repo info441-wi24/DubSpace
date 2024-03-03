@@ -1,6 +1,8 @@
 # Group 6 - DubSpace
 ***Members: Ken Huang, Nic Chin, Benny Po***
 
+Deployed Website: https://dubspace.azurewebsites.net 
+
 ## Project MVP Update
 *So far, we've implemented functionalities such as getting all the posts, being able to post a post, user auth and logging in, and navigating to your profile page. We plan to continue implementing functionalities such as liking and commenting on posts, adding more hashtag functionality, separating post content into class title/professor/rating/etc., and adding any external APIs to display additional information.*
 
