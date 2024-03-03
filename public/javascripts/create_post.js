@@ -11,6 +11,7 @@ async function submitPost(event) {
     event.preventDefault();
     const postContent = document.getElementById("postContent").value;
     const hashtag = document.getElementById("hashtag").value;
+    const titleContent = document.getElementById("title").value;
     let identityInfo = await fetchJSON(`api/users/myIdentity`)
     const myIdentity = identityInfo.userInfo.username;
     try {
@@ -22,7 +23,8 @@ async function submitPost(event) {
             body: JSON.stringify({
                 username: myIdentity,
                 post: postContent,
-                hashtag: hashtag
+                hashtag: hashtag,
+                title: titleContent
             })
         });
         if (!response.ok) {

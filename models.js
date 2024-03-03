@@ -11,9 +11,10 @@ const connectToDatabase = async () => {
     // Define the Post schema and model
     const postSchema = new mongoose.Schema({
       username: String,
+      title: String,
       post: String,
       hashtag: [String],
-      likes: Number,
+      likes: [String],
       created_date: Date
     });
 
@@ -22,6 +23,7 @@ const connectToDatabase = async () => {
     const commentSchema = new mongoose.Schema({
       username: String,
       comment: String,
+      likes: [String],
       post: {type: mongoose.Schema.Types.ObjectId, ref: "Post"},
       created_date: Date
     })

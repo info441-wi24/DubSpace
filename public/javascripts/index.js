@@ -85,6 +85,10 @@ function postCard(data) {
   let formattedDate = currDate.toLocaleDateString('en-US', options)
   extraInfo.textContent = data["username"] + " posted on " + formattedDate;
   let postContent = document.createElement("p");
+  let title = document.createElement("h1");
+  title.textContent = data["title"];
+
+  firstDiv.appendChild(title);
   postContent.textContent = data["post"];
   firstDiv.appendChild(postContent);
 
@@ -96,13 +100,33 @@ function postCard(data) {
       allTags.style.fontStyle = "italic";
       firstDiv.appendChild(allTags);
   }
+  let likeBtn = document.createElement("button");
+  likeBtn.innerHTML = "&#x2764;";
+  likeBtn.classList.add("like-btn");
 
+  let likeCount = document.createElement("span");
+  likeCount.textContent = data.likes.length + " Likes";
+  likeCount.classList.add('like-count');
+
+  firstDiv.appendChild(likeBtn);
+  firstDiv.appendChild(likeCount);
+
+  likeBtn.addEventListener("click", function() {
+    let index = data["likes"].indexOf(username);
+    if (index === -1) {
+      data["likes"].push(username);
+    } else {
+      data["likes"].splice(index, 1);
+    }
+    likeCount.textContent = data.likes.length + " Likes";
+  })
   firstDiv.appendChild(extraInfo)
   container.appendChild(firstDiv)
 
   indivName.addEventListener("click", userPost)
   return container
 }
+
 
 // TODO: Implement viewing a post when a user clicks on a post
 function userPost() {

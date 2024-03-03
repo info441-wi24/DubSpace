@@ -88,3 +88,24 @@ article {
 .newhomebtn:hover {
   background-color: darkgrey;
 }
+
+.card {
+  position: relative;
+}
+
+.like-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 7px;
+  width: 130px;
+  color: red;
+}
+
+.like-count {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 13px;
+  font-size: 12px;
+}
