@@ -1,6 +1,6 @@
 // import { login as authLogin } from './auth.js'; Needa set up auth.js
 
-//window.addEventListener("load", init);
+// window.addEventListener("load", init);
 
 async function init() {
   await loadIdentity();
@@ -45,10 +45,41 @@ async function allPost() {
   }
 }
 
-// TODO: Handle searchbar functions, currently just a dummy function to avoid error
 function searchBar(event) {
-    // Dummy implementation
-    console.log("Search bar input:", event.target.value);
+    let search = event.target.value.trim()
+
+    if (search === "") {
+      document.getElementById("search-btn").disabled = true
+    } else {
+      document.getElementById("search-btn").disabled = false
+      document.getElementById("search-btn").addEventListener("click", searchPost)
+    }
+}
+
+async function searchPost() {
+  document.getElementById("description").innerText = "Loading...";
+  document.getElementById("home").classList.remove("hidden");
+  document.getElementById("user").classList.add("hidden");
+  document.getElementById("new").classList.add("hidden");
+  let search = document.getElementById("search-term").value;
+
+  try {
+    let response = await fetch(`api/posts?search=` + search);
+    let postsJson = await response.json();
+
+    for (let i = 0; i < postsJson.length; i++) {
+      let specificData = postsJson[i];
+      let container = postCard(specificData);
+      document.getElementById("home").appendChild(container);
+    }
+    document.getElementById("description").innerText = "Welcome!";
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    const errorResponse = document.getElementById('error');
+    let errordesc = document.getElementById("description");
+    errordesc.innerText = errorResponse;
+    errordesc.classList.toggle('hidden');
+  }
 }
 
 function homeButton() {

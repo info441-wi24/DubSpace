@@ -4,6 +4,9 @@ var router = express.Router();
 
 
 router.get('/', async(req, res) => {
+    let search = req.query.search
+    console.log(search)
+
     try {
         const Post = req.models.Post;
         let posts;
