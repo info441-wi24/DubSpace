@@ -64,15 +64,17 @@ async function searchPost() {
   let search = document.getElementById("search-term").value;
 
   try {
-    let response = await fetch(`api/posts?search=` + search);
+    let response = await fetch(`api/posts?search=${search}`);
     let postsJson = await response.json();
+    document.getElementById("home").innerHTML = ""
 
     for (let i = 0; i < postsJson.length; i++) {
       let specificData = postsJson[i];
       let container = postCard(specificData);
       document.getElementById("home").appendChild(container);
     }
-    document.getElementById("description").innerText = "Welcome!";
+    document.getElementById("description").innerHTML = `Posts including: "${search}`
+
   } catch (error) {
     console.error("Error fetching posts:", error);
     const errorResponse = document.getElementById('error');
