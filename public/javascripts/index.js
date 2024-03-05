@@ -46,7 +46,6 @@ async function hideLikes() {
         likeButtons[i].classList.remove('hidden');
     }
   } else {
-    console.log('button')
     for (var i = 0; i < likeButtons.length; i++) {
         likeButtons[i].classList.add('hidden');
     }
