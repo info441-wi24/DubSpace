@@ -46,7 +46,6 @@ async function loadUserInfoPosts(username) {
     for (let i = 0; i < postsJson.length; i++) {
         let specificData = postsJson[i];
         let container = await postCard(specificData);
-        console.log(container)
         document.getElementById("posts_box").appendChild(container);
     }
     document.getElementById("user-posts-loading").innerText = "";
@@ -63,7 +62,6 @@ async function deletePost(postID) {
 
 async function searchBar(event) {
     let search = event.target.value.trim()
-
     if (search === "") {
         document.getElementById("search-btn").disabled = true
     } else {
@@ -73,30 +71,8 @@ async function searchBar(event) {
 }
 
 async function searchPost() {
+    sessionStorage.setItem('searchQuery', document.getElementById("search-term").value)
     window.location.href = '/';
-    document.getElementById("description").innerText = "Loading...";
-    document.getElementById("home").classList.remove("hidden");
-    let search = document.getElementById("search-term").value;
-
-    try {
-        let response = await fetch(`api/posts?search=${search}`);
-        let postsJson = await response.json();
-        document.getElementById("home").innerHTML = ""
-
-        for (let i = 0; i < postsJson.length; i++) {
-            let specificData = postsJson[i];
-            let container = postCard(specificData);
-            document.getElementById("home").appendChild(container);
-        }
-        document.getElementById("description").innerHTML = `Posts including: "${search}"`
-
-    } catch (error) {
-        console.error("Error fetching posts:", error);
-        const errorResponse = document.getElementById('error');
-        let errordesc = document.getElementById("description");
-        errordesc.innerText = errorResponse;
-        errordesc.classList.toggle('hidden');
-    }
 }
 
 async function homeButton() {

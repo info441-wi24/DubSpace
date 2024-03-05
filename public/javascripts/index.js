@@ -28,7 +28,10 @@ async function allPost() {
   try {
     if (sessionStorage.getItem('selectedTag')) {
       tagSearch(sessionStorage.getItem('selectedTag'))
-    } else {
+    } else if (sessionStorage.getItem('searchQuery')) {
+      searchPost()
+    }
+    else {
       let response = await fetch(`api/posts`);
       let postsJson = await response.json();
 
@@ -62,7 +65,7 @@ function searchBar(event) {
 async function searchPost() {
   document.getElementById("description").innerText = "Loading...";
   document.getElementById("home").classList.remove("hidden");
-  let search = document.getElementById("search-term").value;
+  let search = sessionStorage.getItem('searchQuery') || document.getElementById("search-term").value;
 
   try {
     let response = await fetch(`api/posts?search=${search}`);
@@ -75,6 +78,7 @@ async function searchPost() {
       document.getElementById("home").appendChild(container);
     }
     document.getElementById("description").innerHTML = `Posts including: "${search}"`
+    sessionStorage.removeItem('searchQuery');
 
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -82,13 +86,13 @@ async function searchPost() {
     let errordesc = document.getElementById("description");
     errordesc.innerText = errorResponse;
     errordesc.classList.toggle('hidden');
+    sessionStorage.removeItem('searchQuery');
   }
 }
 
 async function tagSearch(event) {
   document.getElementById("description").innerText = "Loading...";
   let tag = sessionStorage.getItem('selectedTag') || event.target.textContent.substring(1);
-  console.log(tag)
 
   try {
     let response = await fetch(`api/posts?tag=${tag}`);
