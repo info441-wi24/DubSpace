@@ -59,8 +59,6 @@ function searchBar(event) {
 async function searchPost() {
   document.getElementById("description").innerText = "Loading...";
   document.getElementById("home").classList.remove("hidden");
-  document.getElementById("user").classList.add("hidden");
-  document.getElementById("new").classList.add("hidden");
   let search = document.getElementById("search-term").value;
 
   try {
@@ -73,7 +71,32 @@ async function searchPost() {
       let container = postCard(specificData);
       document.getElementById("home").appendChild(container);
     }
-    document.getElementById("description").innerHTML = `Posts including: "${search}`
+    document.getElementById("description").innerHTML = `Posts including: "${search}"`
+
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    const errorResponse = document.getElementById('error');
+    let errordesc = document.getElementById("description");
+    errordesc.innerText = errorResponse;
+    errordesc.classList.toggle('hidden');
+  }
+}
+
+async function tagSearch(event) {
+  document.getElementById("description").innerText = "Loading...";
+  let tag = event.target.textContent.substring(1);
+
+  try {
+    let response = await fetch(`api/posts?tag=${tag}`);
+    let postsJson = await response.json();
+    document.getElementById("home").innerHTML = ""
+
+    for (let i = 0; i < postsJson.length; i++) {
+      let specificData = postsJson[i];
+      let container = postCard(specificData);
+      document.getElementById("home").appendChild(container);
+    }
+    document.getElementById("description").innerHTML = `Tags including: "${tag}"`
 
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -128,10 +151,16 @@ function postCard(data) {
   const hashTagString = data["hashtag"][0];
   const hashTagArr = hashTagString.split(',');
   if (Array.isArray(hashTagArr) && hashTagArr.length > 0) {
-      let allTags = document.createElement("p");
-      allTags.textContent = hashTagArr.map(tag => '#' + tag.trim()).join(' ');
+    hashTagArr.map(tag => {
+      allTags = document.createElement("p")
+      allTags.textContent = '#' + tag.trim()
       allTags.style.fontStyle = "italic";
+      allTags.style.color = "blue"
+      allTags.style.display = 'inline-block'
+      allTags.style.textIndent = "10px"
+      allTags.addEventListener("click", tagSearch)
       firstDiv.appendChild(allTags);
+    })
   }
   let likeBtn = document.createElement("button");
   likeBtn.innerHTML = "&#x2764;";

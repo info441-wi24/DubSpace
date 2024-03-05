@@ -4,83 +4,51 @@ var router = express.Router();
 
 
 router.get('/', async(req, res) => {
+  let username = req.query.username
   let search = req.query.search
+  let tag = req.query.tag
 
-  if (!search) {
-    try {
-      const Post = req.models.Post;
-      let posts;
-      if (req.query.username) {
-        posts = await Post.find({ username: req.query.username });
-      } else {
-        posts = await Post.find();
-      }
-      const postData = await Promise.all(
-        posts.map(async (post) => {
-          try {
-            const { username, title, post: postContent, hashtag, likes, created_date, _id } = post;
-            return {
-              username,
-              title,
-              post: postContent,
-              hashtag,
-              likes,
-              created_date,
-              id: _id
-            };
-          } catch (error) {
-            return {
-              username: post.username,
-              title: post.title,
-              post: post.post,
-              hashtag: post.hashtag,
-              post: post.likes,
-              created_date: post.created_date
-            }
-          }
-        })
-      );
-      res.json(postData);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ status: 'error', error: error.message });
-    }
-  } else {
-    try {
-      const Post = req.models.Post;
-      let posts;
+  try {
+    const Post = req.models.Post;
+    let posts;
+    if (username && !search && !tag) {
+      posts = await Post.find({username: req.query.username});
+    } else if (search && !username && !tag) {
       posts = await Post.find({post: {$regex: search, $options: 'i'}});
-
-      const postData = await Promise.all(
-        posts.map(async (post) => {
-          try {
-            const { username, title, post: postContent, hashtag, likes, created_date, _id } = post;
-            return {
-              username,
-              title,
-              post: postContent,
-              hashtag,
-              likes,
-              created_date,
-              id: _id
-            };
-          } catch (error) {
-            return {
-              username: post.username,
-              title: post.title,
-              post: post.post,
-              hashtag: post.hashtag,
-              post: post.likes,
-              created_date: post.created_date
-            }
+    } else if (tag && !username && !search) {
+      posts = await Post.find({'hashtag.0': {$regex: tag, $options: 'i'}});
+    } else {
+      posts = await Post.find();
+    }
+    const postData = await Promise.all(
+      posts.map(async (post) => {
+        try {
+          const { username, title, post: postContent, hashtag, likes, created_date, _id } = post;
+          return {
+            username,
+            title,
+            post: postContent,
+            hashtag,
+            likes,
+            created_date,
+            id: _id
+          };
+        } catch (error) {
+          return {
+            username: post.username,
+            title: post.title,
+            post: post.post,
+            hashtag: post.hashtag,
+            post: post.likes,
+            created_date: post.created_date
           }
-        })
-      )
-      res.json(postData);
-    } catch (error) {
+        }
+      })
+    );
+    res.json(postData);
+  } catch (error) {
       console.error(error);
       res.status(500).json({ status: 'error', error: error.message });
-    }
   }
 });
 
