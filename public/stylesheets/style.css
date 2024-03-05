@@ -6,6 +6,7 @@ body {
 main {
   width: 80%;
   margin: auto;
+  text-align: center;
 }
 
 header, nav, header div {
@@ -109,3 +110,7 @@ article {
   padding: 13px;
   font-size: 12px;
 }
+
+/* .create_post_main {
+  text-align: center;
+} */

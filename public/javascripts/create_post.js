@@ -1,6 +1,6 @@
-window.addEventListener("load", init);
+document.addEventListener("DOMContentLoaded", init);
 
-function init() {
+async function init() {
     document.getElementById("home-btn").addEventListener("click", function() {
         window.location.href = '/';
     });
@@ -36,5 +36,3 @@ async function submitPost(event) {
         console.error("Error creating post:", error);
     }
 }
-
-init();
