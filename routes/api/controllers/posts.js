@@ -87,9 +87,6 @@ router.post('/', async(req, res) => {
 });
 
 
-// TODO: Make likes, unlike, comments work for when like is a Number/INT
-// instead of an array of strings.
-
 router.post('/like', async(req, res) => {
     try {
         if (!req.session.isAuthenticated) {
@@ -108,10 +105,6 @@ router.post('/like', async(req, res) => {
         } else {
             console.log("You've already liked this")
         }
-            //const loggedUser = req.session.account.username;
-            //if (!post.likes.includes(loggedUser)) {
-            //    post.likes.push(loggedUser);
-            //}
             await post.save();
             res.json({ status: "success"});
     } catch (error) {

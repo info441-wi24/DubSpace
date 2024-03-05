@@ -16,11 +16,27 @@ async function init() {
         window.location.href = 'createpost.html';
       } else {
         alert("Must be logged in to create posts!")
-      }
+        }
     } catch (error) {
       console.error("logging in", error)
     }
   });
+}
+
+async function hideLikes() {
+  const identityResponse = await fetch('api/users/myIdentity');
+  const identityInfo = await identityResponse.json();
+  let likeButtons = document.getElementsByClassName('like-btn');
+  if (identityInfo.status == "loggedin") {
+    for (var i = 0; i < likeButtons.length; i++) {
+        likeButtons[i].classList.remove('hidden');
+    }
+  } else {
+    console.log('button')
+    for (var i = 0; i < likeButtons.length; i++) {
+        likeButtons[i].classList.add('hidden');
+    }
+  }
 }
 
 async function allPost() {
@@ -197,7 +213,7 @@ function postCard(data) {
     }
   }
   likeBtn.addEventListener("click", handleLikeButtonClick);
-
+  hideLikes();
   firstDiv.appendChild(extraInfo)
   container.appendChild(firstDiv)
 

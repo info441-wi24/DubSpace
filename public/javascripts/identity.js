@@ -6,6 +6,7 @@ async function loadIdentity(){
     try{
         let identityInfo = await fetchJSON(`api/users/myIdentity`)
         if(identityInfo.status == "loggedin"){
+            hideLikes();
             myIdentity = identityInfo.userInfo.username;
             identity_div.innerHTML = `
             <a href="/userInfo.html?user=${encodeURIComponent(identityInfo.userInfo.username)}">${escapeHTML(identityInfo.userInfo.name)} (${escapeHTML(identityInfo.userInfo.username)})</a>
@@ -16,6 +17,7 @@ async function loadIdentity(){
             Array.from(document.getElementsByClassName("new-comment-box")).forEach(e => e.classList.remove("d-none"))
             Array.from(document.getElementsByClassName("heart-button-span")).forEach(e => e.classList.remove("d-none"));
         } else { //logged out
+            hideLikes();
             myIdentity = undefined;
             identity_div.innerHTML = `
             <a href="signin" class="btn btn-primary" role="button">Log in</a>`;
@@ -39,3 +41,19 @@ async function loadIdentity(){
         Array.from(document.getElementsByClassName("heart-button-span")).forEach(e => e.classList.add("d-none"));
     }
 }
+
+async function hideLikes() {
+    const identityResponse = await fetch('api/users/myIdentity');
+    const identityInfo = await identityResponse.json();
+    let likeButtons = document.getElementsByClassName('like-btn');
+    if (identityInfo.status == "loggedin") {
+      for (var i = 0; i < likeButtons.length; i++) {
+          likeButtons[i].classList.remove('hidden');
+      }
+    } else {
+      console.log('button')
+      for (var i = 0; i < likeButtons.length; i++) {
+          likeButtons[i].classList.add('hidden');
+      }
+    }
+  }
