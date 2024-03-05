@@ -182,22 +182,44 @@ function postCard(data) {
 
   firstDiv.appendChild(likeBtn);
   firstDiv.appendChild(likeCount);
-
-  likeBtn.addEventListener("click", function () {
-    let index = data["likes"].indexOf(username);
-    if (index === -1) {
+  function handleLikeButtonClick() {
+    if (data["likes"].indexOf(username) === -1) {
       data["likes"].push(username);
+      likeCount.textContent = data.likes.length + " Likes";
+      likePost(data.id);
     } else {
-      data["likes"].splice(index, 1);
+      const index = data["likes"].indexOf(username);
+      if (index !== -1) {
+        data["likes"].splice(index, 1);
+        likeCount.textContent = data.likes.length + " Likes";
+        unlikePost(data.id);
+      }
     }
-    likeCount.textContent = data.likes.length + " Likes";
-  })
+  }
+  likeBtn.addEventListener("click", handleLikeButtonClick);
+
   firstDiv.appendChild(extraInfo)
   container.appendChild(firstDiv)
 
   indivName.addEventListener("click", userPost)
   return container
 }
+
+async function likePost(postID) {
+  await fetchJSON(`api/posts/like`, {
+      method: "POST",
+      body: {postID: postID}
+  })
+  //window.location.reload();
+}
+
+async function unlikePost(postID){
+  await fetchJSON(`api/posts/unlike`, {
+      method: "POST",
+      body: {postID: postID}
+  })
+}
+
 
 // TODO: Implement viewing a post when a user clicks on a post
 function userPost() {

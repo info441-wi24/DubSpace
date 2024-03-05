@@ -98,16 +98,20 @@ router.post('/like', async(req, res) => {
                 error: "not logged in"
             })
         }
-            const Post = req.models.Post
-            const postID = req.body.postID;
-            const post = await Post.findById(postID);
-            if (!post) {
-                console.log("no post from user");
-            }
-            const loggedUser = req.session.account.username;
-            if (!post.likes.includes(loggedUser)) {
-                post.likes.push(loggedUser);
-            }
+        const postID = req.body.postID;
+        const currentUser = req.session.account.username;
+
+        const post = await req.models.Post.findById(postID);
+
+        if (!post.likes.includes(currentUser)) {
+            post.likes.push(currentUser);
+        } else {
+            console.log("You've already liked this")
+        }
+            //const loggedUser = req.session.account.username;
+            //if (!post.likes.includes(loggedUser)) {
+            //    post.likes.push(loggedUser);
+            //}
             await post.save();
             res.json({ status: "success"});
     } catch (error) {
