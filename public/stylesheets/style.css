@@ -110,3 +110,11 @@ article {
   padding: 13px;
   font-size: 12px;
 }
+
+#send-btn {
+  width: 80px;
+}
+
+#textInput {
+  width: 50%;
+}
