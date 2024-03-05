@@ -7,7 +7,7 @@ async function init() {
   allPost();
   document.querySelector("#search-term").addEventListener("input", searchBar);
   document.getElementById("home-btn").addEventListener("click", homeButton);
-  document.getElementById("post-btn").addEventListener("click", async function() {
+  document.getElementById("post-btn").addEventListener("click", async function () {
     try {
       const identityResponse = await fetch('api/users/myIdentity');
       const identityInfo = await identityResponse.json();
@@ -26,34 +26,37 @@ async function init() {
 async function allPost() {
   document.getElementById("description").innerText = "Loading...";
   try {
-    // Can use fetchJSON, need to import it from utils
+    if (sessionStorage.getItem('selectedTag')) {
+      tagSearch(sessionStorage.getItem('selectedTag'))
+    } else {
       let response = await fetch(`api/posts`);
       let postsJson = await response.json();
 
       for (let i = 0; i < postsJson.length; i++) {
-          let specificData = postsJson[i];
-          let container = postCard(specificData);
-          document.getElementById("home").appendChild(container);
+        let specificData = postsJson[i];
+        let container = postCard(specificData);
+        document.getElementById("home").appendChild(container);
       }
-      document.getElementById("description").innerText = "Welcome!"; // takes out loading text after posts load
+      document.getElementById("description").innerText = "Welcome!";
+    } // takes out loading text after posts load
   } catch (error) {
-      console.error("Error fetching posts:", error);
-      const errorResponse = document.getElementById('error');
-      let errordesc = document.getElementById("description");
-      errordesc.innerText = errorResponse;
-      errordesc.classList.toggle('hidden');
+    console.error("Error fetching posts:", error);
+    const errorResponse = document.getElementById('error');
+    let errordesc = document.getElementById("description");
+    errordesc.innerText = errorResponse;
+    errordesc.classList.toggle('hidden');
   }
 }
 
 function searchBar(event) {
-    let search = event.target.value.trim()
+  let search = event.target.value.trim()
 
-    if (search === "") {
-      document.getElementById("search-btn").disabled = true
-    } else {
-      document.getElementById("search-btn").disabled = false
-      document.getElementById("search-btn").addEventListener("click", searchPost)
-    }
+  if (search === "") {
+    document.getElementById("search-btn").disabled = true
+  } else {
+    document.getElementById("search-btn").disabled = false
+    document.getElementById("search-btn").addEventListener("click", searchPost)
+  }
 }
 
 async function searchPost() {
@@ -84,7 +87,8 @@ async function searchPost() {
 
 async function tagSearch(event) {
   document.getElementById("description").innerText = "Loading...";
-  let tag = event.target.textContent.substring(1);
+  let tag = sessionStorage.getItem('selectedTag') || event.target.textContent.substring(1);
+  console.log(tag)
 
   try {
     let response = await fetch(`api/posts?tag=${tag}`);
@@ -97,6 +101,7 @@ async function tagSearch(event) {
       document.getElementById("home").appendChild(container);
     }
     document.getElementById("description").innerHTML = `Tags including: "${tag}"`
+    sessionStorage.removeItem('selectedTag');
 
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -104,6 +109,7 @@ async function tagSearch(event) {
     let errordesc = document.getElementById("description");
     errordesc.innerText = errorResponse;
     errordesc.classList.toggle('hidden');
+    sessionStorage.removeItem('selectedTag');
   }
 }
 
@@ -173,7 +179,7 @@ function postCard(data) {
   firstDiv.appendChild(likeBtn);
   firstDiv.appendChild(likeCount);
 
-  likeBtn.addEventListener("click", function() {
+  likeBtn.addEventListener("click", function () {
     let index = data["likes"].indexOf(username);
     if (index === -1) {
       data["likes"].push(username);
@@ -189,8 +195,7 @@ function postCard(data) {
   return container
 }
 
-
 // TODO: Implement viewing a post when a user clicks on a post
 function userPost() {
- console.log("TODO!");
+  console.log("TODO!");
 }
