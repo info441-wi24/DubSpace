@@ -226,6 +226,7 @@ function postCard(data) {
     }
   }
   likeBtn.addEventListener("click", handleLikeButtonClick);
+
   hideLikes();
   let viewPostBtn = document.createElement("button")
   viewPostBtn.classList.add("viewbtn");
