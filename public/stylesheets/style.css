@@ -118,3 +118,18 @@ article {
 #textInput {
   width: 50%;
 }
+
+.viewbtn {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  color: black;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.viewbtn:hover {
+  background-color: darkblue;
+}

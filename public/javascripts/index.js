@@ -227,12 +227,15 @@ function postCard(data) {
   }
   likeBtn.addEventListener("click", handleLikeButtonClick);
   hideLikes();
-  firstDiv.appendChild(extraInfo)
-  container.appendChild(firstDiv)
-
-  container.addEventListener("click", function() {
+  let viewPostBtn = document.createElement("button")
+  viewPostBtn.classList.add("viewbtn");
+  viewPostBtn.textContent = "View Post!"
+  viewPostBtn.addEventListener("click", function() {
     userPost(data["id"]);
-  });
+  })
+  firstDiv.appendChild(extraInfo)
+  firstDiv.appendChild(viewPostBtn);
+  container.appendChild(firstDiv)
   return container
 }
 
