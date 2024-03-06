@@ -2,6 +2,7 @@ import express from 'express';
 
 var router = express.Router();
 
+// Endpoint for posting new userinfo
 router.post('/', async (req, res) => {
     console.log("hello 4")
     try {
@@ -24,6 +25,7 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Endpoint for getting userinfo
 router.get('/', async (req, res) => {
     try {
         const userInfo = await req.models.UserInfo.find({ username: req.query.username });

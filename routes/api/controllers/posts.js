@@ -2,7 +2,7 @@ import express from 'express';
 
 var router = express.Router();
 
-
+// Endpoint for getting all posts
 router.get('/', async(req, res) => {
   let username = req.query.username
   let search = req.query.search
@@ -52,6 +52,7 @@ router.get('/', async(req, res) => {
   }
 });
 
+// Endpoint for adding new posts
 router.post('/', async(req, res) => {
     if (!req.session.isAuthenticated) {
         res.status(401).json({
@@ -86,7 +87,7 @@ router.post('/', async(req, res) => {
     }
 });
 
-
+// Endpoint for liking posts
 router.post('/like', async(req, res) => {
     try {
         if (!req.session.isAuthenticated) {
@@ -113,6 +114,7 @@ router.post('/like', async(req, res) => {
     }
 })
 
+// Endpoint for unliking posts
 router.post('/unlike', async(req, res) => {
     try {
         if (!req.session.isAuthenticated) {
@@ -140,6 +142,7 @@ router.post('/unlike', async(req, res) => {
     }
 })
 
+// Endpoint for getting specific post based on id
 router.get('/:id', async (req, res) => {
     try {
         const postId = req.params.id;
@@ -155,9 +158,6 @@ router.get('/:id', async (req, res) => {
         res.status(500).json({ status: 'error', error: error.message });
     }
 });
-
-// TODO: To be implemented, users should probably only be able to delete their own posts
-// from their userInfo page. Also should comments be left there and the post just becomes null?
 
 /*
 router.delete('/', async(req, res) => {

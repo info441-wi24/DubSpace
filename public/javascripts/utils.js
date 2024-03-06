@@ -1,3 +1,4 @@
+// Helper code to protect against cross scripting
 const escapeHTML = str => !str ? str : str.replace(/[&<>'"]/g,
     tag => ({
         '&': '&amp;',
@@ -7,7 +8,7 @@ const escapeHTML = str => !str ? str : str.replace(/[&<>'"]/g,
         '"': '&quot;'
     }[tag]));
 
-
+// fetchJSON helper function to shorten fetch requests
 async function fetchJSON(route, options){
     let response
     try{
@@ -53,6 +54,7 @@ async function fetchJSON(route, options){
     return responseJson
 }
 
+// Helper function to display more specific errors
 async function displayError(){
     document.getElementById('errorInfo').innerText = 'Error: action failed (see console for more information)'
     document.getElementById('errorInfo').style.opacity = 1

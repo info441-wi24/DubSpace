@@ -1,55 +1,51 @@
 document.addEventListener("DOMContentLoaded", init);
 
+// Initializing home button
 async function init() {
     document.getElementById("home-btn").addEventListener("click", function() {
         window.location.href = '/';
     });
 }
 
+// Loads individual post being viewed
 document.addEventListener('DOMContentLoaded', async function() {
     const urlParams = new URLSearchParams(window.location.search);
     const postID = urlParams.get('id');
-
+    // Only if postID is valid
     if (postID) {
         try {
             const postResponse = await fetch(`api/posts/${postID}`);
             const postData = await postResponse.json();
+            // Displaying title, content and tags
             document.getElementById('post-title').textContent = postData.title;
             document.getElementById('post-content').textContent = postData.post;
             let hashtagStr = "";
             postData.hashtag.forEach((hashtag) => hashtagStr += "#" + hashtag + " ");
             document.getElementById('hashtags').textContent = hashtagStr;
 
-            let tempTime = postData.created_date;
-            let currDate = new Date(tempTime);
-            const options = {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric'
-            };
-            let formattedDate = currDate.toLocaleDateString('en-US', options);
+            let formattedDate = formatDate(postData.created_date);
             let userInfo = `Posted by <a href="/userInfo.html?user=${encodeURIComponent(postData.username)}">${postData.username}</a> on ${formattedDate}`;
             document.getElementById('authorinfo').innerHTML = userInfo;
             await fetchComments(postID);
             const identityResponse = await fetch('api/users/myIdentity');
             const identityInfo = await identityResponse.json();
+            // Only allow logged in users to add comments
             if (identityInfo.status === "loggedin") {
                 document.getElementById('comment-form').style.display = "block";
                 document.getElementById('CommentDisplay').textContent = "Comments:"
             } else {
+                // Else display message telling users to login
                 document.getElementById('CommentDisplay').textContent = "Login to add and view comments!"
                 document.getElementById('comment-form').style.display = "none";
             }
-
+            // Error handling
         } catch (error) {
             console.error("Error fetching post:", error);
         }
     } else {
         console.error("No post ID provided in the query parameters.");
     }
-
+    // Fetching all comments and posting new comments
     document.getElementById('comment-form').addEventListener('submit', async function(event) {
         event.preventDefault();
 
@@ -64,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 },
                 body: JSON.stringify({ postID, newComment })
             });
-
+            // Error handling for serverside response errors
             if (response.ok) {
                 const commentData = await response.json();
                 updateCommentSection(commentData.comment);
@@ -78,6 +74,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
 });
 
+// Fetch comments associated with post
 async function fetchComments(postID) {
     try {
         const response = await fetch(`api/comments/?postID=${postID}`);
@@ -86,18 +83,7 @@ async function fetchComments(postID) {
         commentsList.innerHTML = '';
         commentsData.forEach(comment => {
             const commentItem = document.createElement('li');
-
-            let tempTime = comment.created_date;
-            let currDate = new Date(tempTime);
-            const options = {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: 'numeric',
-                minute: 'numeric'
-            };
-            let formattedDate = currDate.toLocaleDateString('en-US', options);
-
+            let formattedDate = formatDate(comment.created_date);
             commentItem.innerHTML = `${comment.username}: ${comment.comment} <br> Posted on ${formattedDate}`;
             commentsList.appendChild(commentItem);
         });
@@ -106,7 +92,7 @@ async function fetchComments(postID) {
     }
 }
 
-
+// Helper function to check if user if properly logged in and authenticated
 async function checkLoginStatus() {
     try {
         const response = await fetch('api/users/myIdentity');
@@ -118,6 +104,7 @@ async function checkLoginStatus() {
     }
 }
 
+// Function that updatesCommentSection when a new commment is added
 function updateCommentSection(commentData) {
     const commentsContainer = document.getElementById('comments-section');
     const commentElement = document.createElement('div');
@@ -135,6 +122,7 @@ function updateCommentSection(commentData) {
     window.location.reload();
 }
 
+// formatDate helper function
 function formatDate(dateString) {
     const date = new Date(dateString);
     const options = {

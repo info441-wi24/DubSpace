@@ -1,13 +1,15 @@
 let myIdentity = undefined;
 
+// Loading user identity function
 async function loadIdentity(){
     let identity_div = document.getElementById("identity_div");
 
     try{
+        // Calls user endpoint to ensure that the user is properly logged in
         let identityInfo = await fetchJSON(`api/users/myIdentity`)
         if(identityInfo.status == "loggedin"){
-            hideLikes();
             myIdentity = identityInfo.userInfo.username;
+            // If loggedin, display the username
             identity_div.innerHTML = `
             <a href="/userInfo.html?user=${encodeURIComponent(identityInfo.userInfo.username)}">${escapeHTML(identityInfo.userInfo.name)} (${escapeHTML(identityInfo.userInfo.username)})</a>
             <a href="signout" class="btn btn-danger" role="button">Log out</a>`;
@@ -16,8 +18,7 @@ async function loadIdentity(){
             }
             Array.from(document.getElementsByClassName("new-comment-box")).forEach(e => e.classList.remove("d-none"))
             Array.from(document.getElementsByClassName("heart-button-span")).forEach(e => e.classList.remove("d-none"));
-        } else { //logged out
-            hideLikes();
+        } else {
             myIdentity = undefined;
             identity_div.innerHTML = `
             <a href="signin" class="btn btn-primary" role="button">Log in</a>`;
@@ -28,6 +29,7 @@ async function loadIdentity(){
             Array.from(document.getElementsByClassName("heart-button-span")).forEach(e => e.classList.add("d-none"));
         }
     } catch(error){
+        // Error handling if the user is not logged in or not not properly authenticated
         myIdentity = undefined;
         identity_div.innerHTML = `<div>
         <button onclick="loadIdentity()">retry</button>
@@ -41,19 +43,3 @@ async function loadIdentity(){
         Array.from(document.getElementsByClassName("heart-button-span")).forEach(e => e.classList.add("d-none"));
     }
 }
-
-async function hideLikes() {
-    const identityResponse = await fetch('api/users/myIdentity');
-    const identityInfo = await identityResponse.json();
-    let likeButtons = document.getElementsByClassName('like-btn');
-    if (identityInfo.status == "loggedin") {
-      for (var i = 0; i < likeButtons.length; i++) {
-          likeButtons[i].classList.remove('hidden');
-      }
-    } else {
-      console.log('button')
-      for (var i = 0; i < likeButtons.length; i++) {
-          likeButtons[i].classList.add('hidden');
-      }
-    }
-  }

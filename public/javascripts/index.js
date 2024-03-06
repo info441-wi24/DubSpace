@@ -1,3 +1,4 @@
+// Loading content and navbar
 async function init() {
   await loadIdentity();
   allPost();
@@ -7,7 +8,7 @@ async function init() {
     try {
       const identityResponse = await fetch('api/users/myIdentity');
       const identityInfo = await identityResponse.json();
-
+      // Ensure that the user must be logged in for them to post
       if (identityInfo.status === "loggedin") {
         window.location.href = 'createpost.html';
       } else {
@@ -19,6 +20,7 @@ async function init() {
   });
 }
 
+// Helper function that ensures that the like button is available only if the user is loggedin
 async function hideLikes() {
   const identityResponse = await fetch('api/users/myIdentity');
   const identityInfo = await identityResponse.json();
@@ -34,6 +36,7 @@ async function hideLikes() {
   }
 }
 
+// Function to get and display all posts
 async function allPost() {
   document.getElementById("description").innerText = "Loading...";
   try {
@@ -43,6 +46,7 @@ async function allPost() {
       searchPost()
     }
     else {
+      // Use posts get endpoint
       let response = await fetch(`api/posts`);
       let postsJson = await response.json();
 
@@ -57,14 +61,16 @@ async function allPost() {
     console.error("Error fetching posts:", error);
     const errorResponse = document.getElementById('error');
     let errordesc = document.getElementById("description");
+    // Display an error message on the homepage if something does not work
     errordesc.innerText = errorResponse;
     errordesc.classList.toggle('hidden');
   }
 }
 
+// Searchbar helper function
 function searchBar(event) {
   let search = event.target.value.trim()
-
+  // Disables search button if search value is blank
   if (search === "") {
     document.getElementById("search-btn").disabled = true
   } else {
@@ -73,6 +79,7 @@ function searchBar(event) {
   }
 }
 
+// Function for searching for posts
 async function searchPost() {
   document.getElementById("description").innerText = "Loading...";
   document.getElementById("home").classList.remove("hidden");
@@ -82,7 +89,7 @@ async function searchPost() {
     let response = await fetch(`api/posts?search=${search}`);
     let postsJson = await response.json();
     document.getElementById("home").innerHTML = ""
-
+    // Searching through posts
     for (let i = 0; i < postsJson.length; i++) {
       let specificData = postsJson[i];
       let container = postCard(specificData);
@@ -91,6 +98,7 @@ async function searchPost() {
     document.getElementById("description").innerHTML = `Posts including: "${search}"`
     sessionStorage.removeItem('searchQuery');
 
+    // Error handling for search
   } catch (error) {
     console.error("Error fetching posts:", error);
     const errorResponse = document.getElementById('error');
@@ -101,11 +109,13 @@ async function searchPost() {
   }
 }
 
+// Function for searching for posts based on hashtag
 async function tagSearch(event) {
   document.getElementById("description").innerText = "Loading...";
   let tag = sessionStorage.getItem('selectedTag') || event.target.textContent.substring(1);
 
   try {
+    // Fetching for posts based on post tag
     let response = await fetch(`api/posts?tag=${tag}`);
     let postsJson = await response.json();
     document.getElementById("home").innerHTML = ""
@@ -118,6 +128,7 @@ async function tagSearch(event) {
     document.getElementById("description").innerHTML = `Tags including: "${tag}"`
     sessionStorage.removeItem('selectedTag');
 
+    // Error handling
   } catch (error) {
     console.error("Error fetching posts:", error);
     const errorResponse = document.getElementById('error');
@@ -128,15 +139,18 @@ async function tagSearch(event) {
   }
 }
 
+// Return to home button function
 function homeButton() {
   window.location.href = '/';
 }
 
+// Creating postcard function
 function postCard(data) {
   let container = document.createElement("article")
   container.classList.add("card")
   container.id = data["id"]
 
+  // Attach basic user information and content to the post
   let username = data["name"];
   let indivName = document.createElement("a");
   indivName.classList.add("individual");
@@ -147,29 +161,22 @@ function postCard(data) {
 
   let extraInfo = document.createElement("p")
   extraInfo.classList.add("user-time")
-  //debug
+  // Error handling for if no post is found
   if (!data["post"]) {
     data["post"] = "No post available";
   }
-  let tempTime = data["created_date"];
-  let currDate = new Date(tempTime);
-  const options = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric'
-  };
-  let formattedDate = currDate.toLocaleDateString('en-US', options)
+  // Date formatting so the date looks bettter
+  let formattedDate = formatDate(data["created_date"]);
   extraInfo.textContent = data["username"] + " posted on " + formattedDate;
   let postContent = document.createElement("p");
   let title = document.createElement("h1");
   title.textContent = data["title"];
-
+  // Appending title and textcontent to the post
   firstDiv.appendChild(title);
   postContent.textContent = data["post"];
   firstDiv.appendChild(postContent);
 
+  // Code displaying all the hashtags associated with the post
   const hashTagString = data["hashtag"][0];
   const hashTagArr = hashTagString.split(',');
   if (Array.isArray(hashTagArr) && hashTagArr.length > 0) {
@@ -184,6 +191,8 @@ function postCard(data) {
       firstDiv.appendChild(allTags);
     })
   }
+
+  // Code adding the likebutton and count functionality to each post
   let likeBtn = document.createElement("button");
   likeBtn.innerHTML = "&#x2764;";
   likeBtn.classList.add("like-btn");
@@ -197,12 +206,15 @@ function postCard(data) {
 
   firstDiv.appendChild(likeBtn);
   firstDiv.appendChild(likeCount);
+  // Like button functionality
   function handleLikeButtonClick() {
     if (data["likes"].indexOf(username) === -1) {
+      // Adds like if the user is not already in the likes array
       data["likes"].push(username);
       likeCount.textContent = data.likes.length + " Likes";
       likePost(data.id);
     } else {
+      // Otherwise unlikes the post
       const index = data["likes"].indexOf(username);
       if (index !== -1) {
         data["likes"].splice(index, 1);
@@ -213,7 +225,10 @@ function postCard(data) {
   }
   likeBtn.addEventListener("click", handleLikeButtonClick);
 
+  // Ensures the likes are hidden if the user is not logged in
   hideLikes();
+
+  // Adds the viewpost button to each post, so users can view posts individually and add comments
   let viewPostBtn = document.createElement("button")
   viewPostBtn.classList.add("viewbtn");
   viewPostBtn.textContent = "View Post!"
@@ -226,14 +241,29 @@ function postCard(data) {
   return container
 }
 
+// Format date into more readable form helper function
+function formatDate(tempTime) {
+  let currDate = new Date(tempTime);
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric'
+  };
+  let formattedDate = currDate.toLocaleDateString('en-US', options)
+  return formattedDate;
+}
+
+// Call to the like router
 async function likePost(postID) {
   await fetchJSON(`api/posts/like`, {
       method: "POST",
       body: {postID: postID}
   })
-  //window.location.reload();
 }
 
+// Call to the unlike router
 async function unlikePost(postID){
   await fetchJSON(`api/posts/unlike`, {
       method: "POST",
@@ -241,6 +271,7 @@ async function unlikePost(postID){
   })
 }
 
+// Function that brings user to view an individual post and add comments
 async function userPost(postID) {
   window.location.href = `viewpost.html?id=${postID}`;
 }

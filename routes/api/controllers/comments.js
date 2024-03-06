@@ -1,7 +1,7 @@
 import express from 'express';
 
 const router = express.Router();
-
+// Router get endpoint
 router.get('/', async (req, res) => {
     try {
         const Comment = req.models.Comment;
@@ -14,6 +14,7 @@ router.get('/', async (req, res) => {
     }
 });
 
+// Router post endpoint for comments
 router.post('/', async (req, res) => {
     try {
         if (!req.session.isAuthenticated) {

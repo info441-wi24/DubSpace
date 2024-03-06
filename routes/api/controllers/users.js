@@ -1,7 +1,7 @@
 import express from 'express';
 
 var router = express.Router();
-
+// Endpoint for auth
 router.get('/myIdentity', (req, res, next) => {
     if (req.session.isAuthenticated) {
         res.json({

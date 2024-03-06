@@ -1,6 +1,8 @@
+// Initializes user page
 async function init() {
     await loadIdentity();
     await loadUserInfo();
+    // Navbar functionality
     document.querySelector("#search-term").addEventListener("input", searchBar);
     document.getElementById("home-btn").addEventListener("click", homeButton);
     document.getElementById("post-btn").addEventListener("click", async function () {
@@ -19,6 +21,7 @@ async function init() {
     });
 }
 
+// Function that allows users to save new user information such as major or year
 async function saveUserInfo() {
     try {
         const updatedpreferredName = document.getElementById("updatedpreferredName").value;
@@ -45,6 +48,7 @@ async function saveUserInfo() {
     }
 }
 
+// Function that loads all the user information that users have entered
 async function loadUserInfo() {
     const urlParams = new URLSearchParams(window.location.search);
     const username = urlParams.get('user');
@@ -56,6 +60,7 @@ async function loadUserInfo() {
         document.getElementById("user_info_new_div").classList.add("d-none");
     }
     try {
+        // Fetch userinfo
         const userInfoJson = await fetchJSON(`api/userInfo?username=${encodeURIComponent(username)}`);
         console.log(userInfoJson)
         if (userInfoJson && userInfoJson.length > 0) {
@@ -65,6 +70,7 @@ async function loadUserInfo() {
             document.getElementById("year-span").innerText = userInfoJson[0].year || "No graduating year specified";
             document.getElementById("fun-fact-span").innerText = userInfoJson[0].fun_fact || "No fun fact specified";
         } else {
+            // If no specific information has been entered, display these defaults
             document.getElementById("preferred-name-span").innerText = "No preferred name specified";
             document.getElementById("pronouns-span").innerText = "No pronouns specified";
             document.getElementById("major-span").innerText = "No major specified";
@@ -74,11 +80,12 @@ async function loadUserInfo() {
 
         loadUserInfoPosts(username);
     } catch (error) {
+        // Error handling for user info
         console.error('Error loading user information:', error);
     }
 }
 
-
+// Loads all posts posted by the user
 async function loadUserInfoPosts(username) {
     document.getElementById("user-posts-loading").innerText = "Loading...";
     let postsJson = await fetchJSON(`api/posts?username=${encodeURIComponent(username)}`);
@@ -90,7 +97,7 @@ async function loadUserInfoPosts(username) {
     document.getElementById("user-posts-loading").innerText = "";
 }
 
-
+// Allows users to delete posts that they have posted
 async function deletePost(postID) {
     let responseJson = await fetchJSON(`api/posts`, {
         method: "DELETE",
@@ -99,6 +106,7 @@ async function deletePost(postID) {
     loadUserInfo();
 }
 
+// Different search bar function index that allows for searchbar to work when viewing a user profile
 async function searchBar(event) {
     let search = event.target.value.trim()
     if (search === "") {
@@ -109,20 +117,24 @@ async function searchBar(event) {
     }
 }
 
+// Searchpost helper function
 async function searchPost() {
     sessionStorage.setItem('searchQuery', document.getElementById("search-term").value)
     window.location.href = '/';
 }
 
+// Return to homepage
 async function homeButton() {
     window.location.href = '/';
 }
 
+// Helper function for searching by hashtag
 async function tagSearch(event) {
     sessionStorage.setItem('selectedTag', event.target.textContent.substring(1));
     window.location.href = '/';
 }
 
+// Similar postCard function to index, but needed for specific posts on the userInfo page
 function postCard(data) {
     let container = document.createElement("article")
     container.classList.add("card")
@@ -141,16 +153,7 @@ function postCard(data) {
     if (!data["post"]) {
       data["post"] = "No post available";
     }
-    let tempTime = data["created_date"];
-    let currDate = new Date(tempTime);
-    const options = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric'
-    };
-    let formattedDate = currDate.toLocaleDateString('en-US', options)
+    let formattedDate = formatDate(data["created_date"]);
     extraInfo.textContent = data["username"] + " posted on " + formattedDate;
     let postContent = document.createElement("p");
     let title = document.createElement("h1");
@@ -162,6 +165,7 @@ function postCard(data) {
   
     const hashTagString = data["hashtag"][0];
     const hashTagArr = hashTagString.split(',');
+    // Hashtag styling
     if (Array.isArray(hashTagArr) && hashTagArr.length > 0) {
       hashTagArr.map(tag => {
         allTags = document.createElement("p")
@@ -174,6 +178,7 @@ function postCard(data) {
         firstDiv.appendChild(allTags);
       })
     }
+    // Like displays and likebutton functionality
     let likeBtn = document.createElement("button");
     likeBtn.innerHTML = "&#x2764;";
     likeBtn.classList.add("like-btn");
@@ -201,6 +206,7 @@ function postCard(data) {
         }
       }
     }
+    // View posts individually functionality
     likeBtn.addEventListener("click", handleLikeButtonClick);
     hideLikes();
     let viewPostBtn = document.createElement("button")
@@ -215,6 +221,21 @@ function postCard(data) {
     return container
   }
 
+// View a user's post individually
 async function userPost(postID) {
     window.location.href = `viewpost.html?id=${postID}`;
+  }
+
+  // Format date into more readable form helper function
+function formatDate(tempTime) {
+    let currDate = new Date(tempTime);
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    };
+    let formattedDate = currDate.toLocaleDateString('en-US', options)
+    return formattedDate;
   }
