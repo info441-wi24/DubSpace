@@ -230,7 +230,9 @@ function postCard(data) {
   firstDiv.appendChild(extraInfo)
   container.appendChild(firstDiv)
 
-  indivName.addEventListener("click", userPost)
+  container.addEventListener("click", function() {
+    userPost(data["id"]);
+  });
   return container
 }
 
@@ -251,6 +253,6 @@ async function unlikePost(postID){
 
 
 // TODO: Implement viewing a post when a user clicks on a post
-function userPost() {
-  console.log("TODO!");
+async function userPost(postID) {
+  window.location.href = `viewpost.html?id=${postID}`;
 }

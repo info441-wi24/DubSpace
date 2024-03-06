@@ -140,6 +140,22 @@ router.post('/unlike', async(req, res) => {
     }
 })
 
+router.get('/:id', async (req, res) => {
+    try {
+        const postId = req.params.id;
+        const post = await req.models.Post.findById(postId);
+
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        res.json(post);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: 'error', error: error.message });
+    }
+});
+
 // TODO: To be implemented, users should probably only be able to delete their own posts
 // from their userInfo page. Also should comments be left there and the post just becomes null?
 
