@@ -63,7 +63,7 @@ async function allPost() {
       for (let i = 0; i < postsJson.length; i++) {
         let specificData = postsJson[i];
         let container = postCard(specificData);
-        document.getElementById("home").appendChild(container);
+        document.getElementById("home").prepend(container);
       }
       document.getElementById("description").innerText = "Welcome!";
     } // takes out loading text after posts load
@@ -225,6 +225,7 @@ function postCard(data) {
     }
   }
   likeBtn.addEventListener("click", handleLikeButtonClick);
+
   hideLikes();
   let viewPostBtn = document.createElement("button")
   viewPostBtn.classList.add("viewbtn");

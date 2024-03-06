@@ -131,7 +131,7 @@ article {
 }
 
 .viewbtn:hover {
-  background-color: darkblue;
+  background-color: rgb(105, 105, 244);
 }
 
 .create-post-form {

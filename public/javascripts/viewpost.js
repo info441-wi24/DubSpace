@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (identityInfo.status === "loggedin") {
                 document.getElementById('comment-form').style.display = "block";
             } else {
+                document.getElementById('CommentDisplay').textContent = "Login to add and view comments!"
                 document.getElementById('comment-form').style.display = "none";
             }
 

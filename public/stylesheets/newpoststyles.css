@@ -1,44 +1,47 @@
 body {
     margin: 0px;
-    font-family: "IBM Plex Sans"
-  }
-  
-  main {
+    font-family: "IBM Plex Sans";
+}
+
+main {
     width: 80%;
     margin: auto;
     text-align: center;
-  }
-  
-  header, nav, header div {
+}
+
+header,
+nav,
+header div {
     display: flex;
     align-items: center;
-  }
-  
-  header, nav {
+}
+
+header,
+nav {
     justify-content: space-around;
-  }
-  
-  header {
+}
+
+header {
     background-color: lightsteelblue;
     position: sticky;
     top: 0px;
     height: 15vh;
     z-index: 1000;
-  }
-  
-  header img {
+}
+
+header img {
     margin: 0px;
     margin-right: 1.5vw;
     height: 8vh;
-  }
-  
-  nav input {
+}
+
+nav input {
     height: 35px;
     width: 40vw;
     border-radius: 5px;
-  }
-  
-  .newhomebtn {
+}
+
+.newhomebtn {
     background-color: grey;
     color: white;
     padding: 10px 20px;
@@ -47,24 +50,23 @@ body {
     cursor: pointer;
     font-size: 16px;
     font-weight: bold;
-    width: 100%
-  }
-  
-  button {
+    width: 100%;
+}
+
+button {
     font-weight: bold;
     font-size: 1vw;
     margin: 1%;
     width: 20%;
     cursor: pointer;
     text-align: center;
-  }
-  
-  button:hover {
-    background-color: antiquewhite;
-  }
-  
+}
 
-  .container {
+button:hover {
+    background-color: antiquewhite;
+}
+
+.container {
     max-width: 900px;
     margin: 30px auto;
     padding: 0 30px;
@@ -101,4 +103,4 @@ body {
 
 .hidden {
     display: none;
-  }
+}

@@ -1,10 +1,12 @@
 document.addEventListener("DOMContentLoaded", init);
 
 async function init() {
-    document.getElementById("home-btn").addEventListener("click", function() {
-        window.location.href = '/';
-    });
+    document.getElementById("home-btn").addEventListener("click", homeButton);
     document.getElementById("post-form").addEventListener("submit", submitPost);
+}
+
+async function homeButton() {
+    window.location.href = '/';
 }
 
 async function submitPost(event) {
