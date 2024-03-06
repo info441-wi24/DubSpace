@@ -159,24 +159,40 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-/*
-router.delete('/', async(req, res) => {
+// TODO: To be implemented, users should probably only be able to delete their own posts
+// from their userInfo page. Also should comments be left there and the post just becomes null?
+
+
+router.delete('/', async (req, res) => {
     try {
-        if (!req.isAuthenticated || !req.sessions.account.username) {
-            res.status(401).json({
+        if (!req.session.isAuthenticated) {
+            return res.status(401).json({
                 status: "error",
-                error: "not logged in"
-            })
+                error: "not logged in",
+            });
         }
-        const Post = req.models.Post;
-        const { postID } = req.body
-        const Comment = req.models.Comment;
-        await Comment.deleteMany({ post: postID });
-        await Post.deleteOne({ _id: postID });
-        return res.json({ status: "success" });
-    } catch(error) {
-        console.error(error)
-        return res.status(500).json({ status: "error", error: error.message });
+
+        const postID = req.body.postID;
+        const currentUser = req.session.account.username;
+
+        const post = await req.models.Post.findById(postID);
+        console.log(post)
+
+        if (post.username !== currentUser) {
+            return res.status(401).json({
+                status: "error",
+                error: "you can only delete your own posts",
+            });
+        }
+
+        await req.models.Comment.deleteMany({ post: postID });
+        await req.models.Post.deleteOne({ _id: postID });
+
+        res.json({ "status": "success" });
+    } catch (error) {
+        console.log("Error deleting post", error);
+        res.status(500).json({ "status": "error", "error": error });
     }
-}) */
+});
+
 export default router;

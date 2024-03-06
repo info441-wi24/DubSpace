@@ -99,11 +99,11 @@ async function loadUserInfoPosts(username) {
 
 // Allows users to delete posts that they have posted
 async function deletePost(postID) {
-    let responseJson = await fetchJSON(`api/posts`, {
+    let responseJson = await fetchJSON('api/posts', {
         method: "DELETE",
         body: { postID: postID }
     })
-    loadUserInfo();
+    window.location.reload();
 }
 
 // Different search bar function index that allows for searchbar to work when viewing a user profile
@@ -139,44 +139,44 @@ function postCard(data) {
     let container = document.createElement("article")
     container.classList.add("card")
     container.id = data["id"]
-  
+
     let username = data["name"]
     let indivName = document.createElement("p")
     indivName.classList.add("individual")
     indivName.textContent = username
     let firstDiv = document.createElement("div")
     firstDiv.appendChild(indivName)
-  
+
     let extraInfo = document.createElement("p")
     extraInfo.classList.add("user-time")
     //debug
     if (!data["post"]) {
-      data["post"] = "No post available";
+        data["post"] = "No post available";
     }
     let formattedDate = formatDate(data["created_date"]);
     extraInfo.textContent = data["username"] + " posted on " + formattedDate;
     let postContent = document.createElement("p");
     let title = document.createElement("h1");
     title.textContent = data["title"];
-  
+
     firstDiv.appendChild(title);
     postContent.textContent = data["post"];
     firstDiv.appendChild(postContent);
-  
+
     const hashTagString = data["hashtag"][0];
     const hashTagArr = hashTagString.split(',');
     // Hashtag styling
     if (Array.isArray(hashTagArr) && hashTagArr.length > 0) {
-      hashTagArr.map(tag => {
-        allTags = document.createElement("p")
-        allTags.textContent = '#' + tag.trim()
-        allTags.style.fontStyle = "italic";
-        allTags.style.color = "blue"
-        allTags.style.display = 'inline-block'
-        allTags.style.textIndent = "10px"
-        allTags.addEventListener("click", tagSearch)
-        firstDiv.appendChild(allTags);
-      })
+        hashTagArr.map(tag => {
+            allTags = document.createElement("p")
+            allTags.textContent = '#' + tag.trim()
+            allTags.style.fontStyle = "italic";
+            allTags.style.color = "blue"
+            allTags.style.display = 'inline-block'
+            allTags.style.textIndent = "10px"
+            allTags.addEventListener("click", tagSearch)
+            firstDiv.appendChild(allTags);
+        })
     }
     // Like displays and likebutton functionality
     let likeBtn = document.createElement("button");
@@ -184,27 +184,27 @@ function postCard(data) {
     likeBtn.classList.add("like-btn");
     likeBtn.style.borderRadius = "5px";
     likeBtn.style.border = "none";
-  
+
     let likeCount = document.createElement("span");
     likeCount.textContent = data.likes.length + " Likes";
     likeCount.classList.add('like-count');
     likeCount.style.fontWeight = "bold";
-  
+
     firstDiv.appendChild(likeBtn);
     firstDiv.appendChild(likeCount);
     function handleLikeButtonClick() {
-      if (data["likes"].indexOf(username) === -1) {
-        data["likes"].push(username);
-        likeCount.textContent = data.likes.length + " Likes";
-        likePost(data.id);
-      } else {
-        const index = data["likes"].indexOf(username);
-        if (index !== -1) {
-          data["likes"].splice(index, 1);
-          likeCount.textContent = data.likes.length + " Likes";
-          unlikePost(data.id);
+        if (data["likes"].indexOf(username) === -1) {
+            data["likes"].push(username);
+            likeCount.textContent = data.likes.length + " Likes";
+            likePost(data.id);
+        } else {
+            const index = data["likes"].indexOf(username);
+            if (index !== -1) {
+                data["likes"].splice(index, 1);
+                likeCount.textContent = data.likes.length + " Likes";
+                unlikePost(data.id);
+            }
         }
-      }
     }
     // View posts individually functionality
     likeBtn.addEventListener("click", handleLikeButtonClick);
@@ -212,14 +212,19 @@ function postCard(data) {
     let viewPostBtn = document.createElement("button")
     viewPostBtn.classList.add("viewbtn");
     viewPostBtn.textContent = "View Post!"
-    viewPostBtn.addEventListener("click", function() {
-      userPost(data["id"]);
+    viewPostBtn.addEventListener("click", function () {
+        userPost(data["id"]);
     })
     firstDiv.appendChild(extraInfo)
     firstDiv.appendChild(viewPostBtn);
     container.appendChild(firstDiv)
-    return container
-  }
+    if (data.username === myIdentity) {
+        let deleteButtonContainer = document.createElement('div');
+        deleteButtonContainer.innerHTML = `<button class='btn btn-danger btn-sm' onclick='deletePost("${data.id}")' class="${data.username == myIdentity ? "" : "d-none"}">Delete</button>`;
+        firstDiv.appendChild(deleteButtonContainer);
+    }
+    return container;
+}
 
 // View a user's post individually
 async function userPost(postID) {
@@ -238,4 +243,20 @@ function formatDate(tempTime) {
     };
     let formattedDate = currDate.toLocaleDateString('en-US', options)
     return formattedDate;
+  }
+
+  // Helper function to hidelikes
+  async function hideLikes() {
+    const identityResponse = await fetch('api/users/myIdentity');
+    const identityInfo = await identityResponse.json();
+    let likeButtons = document.getElementsByClassName('like-btn');
+    if (identityInfo.status == "loggedin") {
+      for (var i = 0; i < likeButtons.length; i++) {
+          likeButtons[i].classList.remove('hidden');
+      }
+    } else {
+      for (var i = 0; i < likeButtons.length; i++) {
+          likeButtons[i].classList.add('hidden');
+      }
+    }
   }

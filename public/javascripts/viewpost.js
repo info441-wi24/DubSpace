@@ -84,7 +84,7 @@ async function fetchComments(postID) {
         commentsData.forEach(comment => {
             const commentItem = document.createElement('li');
             let formattedDate = formatDate(comment.created_date);
-            commentItem.innerHTML = `${comment.username}: ${comment.comment} <br> Posted on ${formattedDate}`;
+            commentItem.innerHTML = `<a href="/userInfo.html?user=${encodeURIComponent(comment.username)}">${comment.username}</a>: ${comment.comment} <br> Posted on ${formattedDate}`;
             commentsList.appendChild(commentItem);
         });
     } catch (error) {
