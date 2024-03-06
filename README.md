@@ -60,6 +60,10 @@ P3 | Student | I want to be able to friend or follow other user profiles. | Add 
     - Description: If tag parameter is included, provide all of the posts matching the term passed in the tag query parameter.
     - Request Type: `GET`
     - Response Type: JSON
+  - Endpoint: `/posts?username=`
+    - Description: If username parameter is included, provide all of the posts matching the term passed in the username query parameter.
+    - Request Type: `GET`
+    - Response Type: JSON
   - Endpoint: `/posts/like`
     - Description: Increment the current value of likes of the given post by 1 and respond with the new value.
     - Request Type: `POST`
@@ -82,7 +86,20 @@ P3 | Student | I want to be able to friend or follow other user profiles. | Add 
     - Request Type: `POST`
     - Response Type: JSON
   - Endpoint: `/comments?postID=`
-    - Description: Retrieves the comments of a given post.
+    - Description: If postID parameter is included, provide all of the comments matching the term passed in the postID query parameter.
+    - Request Type: `GET`
+    - Response Type: JSON
+- User Information
+  - Endpoint: `/userInfo`
+    - Description: Retrieves all user information.
+    - Request Type: `GET`
+    - Response Type: JSON
+  - Endpoint: `/userInfo`
+    - Description: Adds a new entry to the user information table.
+    - Request Type: `POST`
+    - Response Type: JSON
+  - Endpoint: `/userInfo?username=`
+    - Description: If username parameter is included, provide all of the user information matching the term passed in the username query parameter.
     - Request Type: `GET`
     - Response Type: JSON
 
@@ -101,3 +118,11 @@ P3 | Student | I want to be able to friend or follow other user profiles. | Add 
   - likes
   - post
   - created_date
+
+- userInfoSchema
+  - username
+  - preferred_name
+  - pronouns
+  - major
+  - year
+  - fun_fact
