@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', async function() {
                 minute: 'numeric'
             };
             let formattedDate = currDate.toLocaleDateString('en-US', options);
-            let userInfo = "Posted by " + postData.username + " on " + formattedDate;
-            document.getElementById('authorinfo').textContent = userInfo;
+            let userInfo = `Posted by <a href="/userInfo.html?user=${encodeURIComponent(postData.username)}">${postData.username}</a> on ${formattedDate}`;
+            document.getElementById('authorinfo').innerHTML = userInfo;
             await fetchComments(postID);
             const identityResponse = await fetch('api/users/myIdentity');
             const identityInfo = await identityResponse.json();

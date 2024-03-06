@@ -17,20 +17,6 @@ async function init() {
             console.error("logging in", error)
         }
     });
-    document.getElementById("chat-btn").addEventListener("click", async function () {
-        try {
-          const identityResponse = await fetch('api/users/myIdentity');
-          const identityInfo = await identityResponse.json();
-
-          if (identityInfo.status === "loggedin") {
-            window.location.href = 'chat.html';
-          } else {
-            alert("Must be logged in to chat!")
-          }
-        } catch (error) {
-          console.error("logging in", error)
-        }
-      });
 }
 
 async function saveUserInfo() {
