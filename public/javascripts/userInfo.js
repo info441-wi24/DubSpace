@@ -212,10 +212,11 @@ function postCard(data) {
     firstDiv.appendChild(extraInfo)
     firstDiv.appendChild(viewPostBtn);
     container.appendChild(firstDiv)
-    let deleteButtonContainer = document.createElement('div');
-    deleteButtonContainer.innerHTML = `<button class='btn btn-danger btn-sm' onclick='deletePost("${data.id}")' class="${data.username == myIdentity ? "" : "d-none"}">Delete</button>`;
-
-    firstDiv.appendChild(deleteButtonContainer);
+    if (data.username === myIdentity) {
+        let deleteButtonContainer = document.createElement('div');
+        deleteButtonContainer.innerHTML = `<button class='btn btn-danger btn-sm' onclick='deletePost("${data.id}")' class="${data.username == myIdentity ? "" : "d-none"}">Delete</button>`;
+        firstDiv.appendChild(deleteButtonContainer);
+    }
     return container;
 }
 
