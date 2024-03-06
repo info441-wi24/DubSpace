@@ -30,6 +30,17 @@ const connectToDatabase = async () => {
 
     models.Comment = mongoose.model('Comment', commentSchema);
 
+    const userInfoSchema = new mongoose.Schema({
+      username: String,
+      preferred_name: String,
+      pronouns: String,
+      major: String,
+      year: String,
+      fun_fact: String
+  })
+  
+  models.UserInfo = mongoose.model('UserInfo', userInfoSchema) 
+
     console.log("Mongoose models created");
   } catch (error) {
     console.error("Error connecting to MongoDB:", error.message);

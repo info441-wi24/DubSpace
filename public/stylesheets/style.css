@@ -115,9 +115,9 @@ article {
   width: 80px;
 }
 
-#textInput {
+/* #textInput {
   width: 50%;
-}
+} */
 
 .viewbtn {
   position: absolute;
@@ -132,4 +132,14 @@ article {
 
 .viewbtn:hover {
   background-color: darkblue;
+}
+
+.create-post-form {
+  width: 60%;
+  margin: auto;
+}
+
+.chat-form {
+  width: 60%;
+  margin: auto;
 }

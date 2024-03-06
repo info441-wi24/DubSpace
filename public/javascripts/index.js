@@ -1,7 +1,3 @@
-// import { login as authLogin } from './auth.js'; Needa set up auth.js
-
-// window.addEventListener("load", init);
-
 async function init() {
   await loadIdentity();
   allPost();
@@ -204,10 +200,13 @@ function postCard(data) {
   let likeBtn = document.createElement("button");
   likeBtn.innerHTML = "&#x2764;";
   likeBtn.classList.add("like-btn");
+  likeBtn.style.borderRadius = "5px";
+  likeBtn.style.border = "none";
 
   let likeCount = document.createElement("span");
   likeCount.textContent = data.likes.length + " Likes";
   likeCount.classList.add('like-count');
+  likeCount.style.fontWeight = "bold";
 
   firstDiv.appendChild(likeBtn);
   firstDiv.appendChild(likeCount);
@@ -254,8 +253,6 @@ async function unlikePost(postID){
   })
 }
 
-
-// TODO: Implement viewing a post when a user clicks on a post
 async function userPost(postID) {
   window.location.href = `viewpost.html?id=${postID}`;
 }

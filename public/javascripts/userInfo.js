@@ -34,8 +34,29 @@ async function init() {
 }
 
 async function saveUserInfo() {
-    //TODO: do an ajax call to save whatever info you want about the user from the user table
-    //see postComment() in the index.js file as an example of how to do this
+    try {
+        const updatedpreferredName = document.getElementById("updatedpreferredName").value;
+        const updatedPronouns = document.getElementById("updatedPronouns").value;
+        const updatedMajor = document.getElementById("updatedMajor").value;
+        const updatedYear = document.getElementById("updatedYear").value;
+        const updatedFunFact = document.getElementById("updatedFunFact").value;
+        await fetchJSON(`api/userInfo`, {
+            method: "POST",
+            body: {
+                username: myIdentity,
+                preferred_name: updatedpreferredName,
+                pronouns: updatedPronouns,
+                major: updatedMajor,
+                year: updatedYear,
+                fun_fact: updatedFunFact
+            },
+        });
+
+        window.location.reload();
+    } catch (error) {
+        console.error('Error saving user information:', error);
+        document.getElementById("user_info_new_div").innerText = error;
+    }
 }
 
 async function loadUserInfo() {
@@ -48,9 +69,27 @@ async function loadUserInfo() {
         document.getElementById("username-span").innerText = username;
         document.getElementById("user_info_new_div").classList.add("d-none");
     }
-    //TODO: do an ajax call to load whatever info you want about the user from the user table
+    try {
+        const userInfoJson = await fetchJSON(`api/userInfo?username=${encodeURIComponent(username)}`);
+        console.log(userInfoJson)
+        if (userInfoJson && userInfoJson.length > 0) {
+            document.getElementById("preferred-name-span").innerText = userInfoJson[0].preferred_name || "No preferred name specified";
+            document.getElementById("pronouns-span").innerText = userInfoJson[0].pronouns || "No pronouns specified";
+            document.getElementById("major-span").innerText = userInfoJson[0].major || "No major specified";
+            document.getElementById("year-span").innerText = userInfoJson[0].year || "No graduating year specified";
+            document.getElementById("fun-fact-span").innerText = userInfoJson[0].fun_fact || "No fun fact specified";
+        } else {
+            document.getElementById("preferred-name-span").innerText = "No preferred name specified";
+            document.getElementById("pronouns-span").innerText = "No pronouns specified";
+            document.getElementById("major-span").innerText = "No major specified";
+            document.getElementById("year-span").innerText = "No graduating year specified";
+            document.getElementById("fun-fact-span").innerText = "No fun fact specified";
+        }
 
-    loadUserInfoPosts(username)
+        loadUserInfoPosts(username);
+    } catch (error) {
+        console.error('Error loading user information:', error);
+    }
 }
 
 
@@ -98,86 +137,98 @@ async function tagSearch(event) {
     window.location.href = '/';
 }
 
-
-
-async function postCard(data) {
+function postCard(data) {
     let container = document.createElement("article")
     container.classList.add("card")
     container.id = data["id"]
-
+  
     let username = data["name"]
     let indivName = document.createElement("p")
     indivName.classList.add("individual")
     indivName.textContent = username
     let firstDiv = document.createElement("div")
     firstDiv.appendChild(indivName)
-
+  
     let extraInfo = document.createElement("p")
     extraInfo.classList.add("user-time")
     //debug
     if (!data["post"]) {
-        data["post"] = "No post available";
+      data["post"] = "No post available";
     }
     let tempTime = data["created_date"];
     let currDate = new Date(tempTime);
     const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
     };
     let formattedDate = currDate.toLocaleDateString('en-US', options)
     extraInfo.textContent = data["username"] + " posted on " + formattedDate;
     let postContent = document.createElement("p");
     let title = document.createElement("h1");
     title.textContent = data["title"];
-
+  
     firstDiv.appendChild(title);
     postContent.textContent = data["post"];
     firstDiv.appendChild(postContent);
-
+  
     const hashTagString = data["hashtag"][0];
     const hashTagArr = hashTagString.split(',');
     if (Array.isArray(hashTagArr) && hashTagArr.length > 0) {
-        hashTagArr.map(tag => {
-            allTags = document.createElement("p")
-            allTags.textContent = '#' + tag.trim()
-            allTags.style.fontStyle = "italic";
-            allTags.style.color = "blue"
-            allTags.style.display = 'inline-block'
-            allTags.style.textIndent = "10px"
-            allTags.addEventListener("click", tagSearch)
-            firstDiv.appendChild(allTags);
-        })
+      hashTagArr.map(tag => {
+        allTags = document.createElement("p")
+        allTags.textContent = '#' + tag.trim()
+        allTags.style.fontStyle = "italic";
+        allTags.style.color = "blue"
+        allTags.style.display = 'inline-block'
+        allTags.style.textIndent = "10px"
+        allTags.addEventListener("click", tagSearch)
+        firstDiv.appendChild(allTags);
+      })
     }
     let likeBtn = document.createElement("button");
     likeBtn.innerHTML = "&#x2764;";
     likeBtn.classList.add("like-btn");
-
+    likeBtn.style.borderRadius = "5px";
+    likeBtn.style.border = "none";
+  
     let likeCount = document.createElement("span");
     likeCount.textContent = data.likes.length + " Likes";
     likeCount.classList.add('like-count');
-
+    likeCount.style.fontWeight = "bold";
+  
     firstDiv.appendChild(likeBtn);
     firstDiv.appendChild(likeCount);
-
-    likeBtn.addEventListener("click", function () {
-        let index = data["likes"].indexOf(username);
-        if (index === -1) {
-            data["likes"].push(username);
-        } else {
-            data["likes"].splice(index, 1);
-        }
+    function handleLikeButtonClick() {
+      if (data["likes"].indexOf(username) === -1) {
+        data["likes"].push(username);
         likeCount.textContent = data.likes.length + " Likes";
+        likePost(data.id);
+      } else {
+        const index = data["likes"].indexOf(username);
+        if (index !== -1) {
+          data["likes"].splice(index, 1);
+          likeCount.textContent = data.likes.length + " Likes";
+          unlikePost(data.id);
+        }
+      }
+    }
+    likeBtn.addEventListener("click", handleLikeButtonClick);
+    hideLikes();
+    let viewPostBtn = document.createElement("button")
+    viewPostBtn.classList.add("viewbtn");
+    viewPostBtn.textContent = "View Post!"
+    viewPostBtn.addEventListener("click", function() {
+      userPost(data["id"]);
     })
     firstDiv.appendChild(extraInfo)
+    firstDiv.appendChild(viewPostBtn);
     container.appendChild(firstDiv)
-
-    indivName.addEventListener("click", userPost)
     return container
-}
+  }
 
-function userPost() {
-    console.log("TODO!");
-   }
+async function userPost(postID) {
+    window.location.href = `viewpost.html?id=${postID}`;
+  }
