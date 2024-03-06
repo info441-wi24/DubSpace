@@ -98,7 +98,7 @@ async function fetchComments(postID) {
             };
             let formattedDate = currDate.toLocaleDateString('en-US', options);
 
-            commentItem.innerHTML = `${comment.username}: ${comment.comment} <br> Posted on ${formattedDate}`;
+            commentItem.innerHTML = `<a href="/userInfo.html?user=${encodeURIComponent(comment.username)}">${comment.username}</a>: ${comment.comment} <br> Posted on ${formattedDate}`;
             commentsList.appendChild(commentItem);
         });
     } catch (error) {
