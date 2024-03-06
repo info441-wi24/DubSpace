@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             const identityInfo = await identityResponse.json();
             if (identityInfo.status === "loggedin") {
                 document.getElementById('comment-form').style.display = "block";
+                document.getElementById('CommentDisplay').textContent = "Comments:"
             } else {
                 document.getElementById('CommentDisplay').textContent = "Login to add and view comments!"
                 document.getElementById('comment-form').style.display = "none";
@@ -85,7 +86,19 @@ async function fetchComments(postID) {
         commentsList.innerHTML = '';
         commentsData.forEach(comment => {
             const commentItem = document.createElement('li');
-            commentItem.textContent = `${comment.username}: ${comment.comment}`;
+
+            let tempTime = comment.created_date;
+            let currDate = new Date(tempTime);
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric'
+            };
+            let formattedDate = currDate.toLocaleDateString('en-US', options);
+
+            commentItem.innerHTML = `${comment.username}: ${comment.comment} <br> Posted on ${formattedDate}`;
             commentsList.appendChild(commentItem);
         });
     } catch (error) {
@@ -119,6 +132,7 @@ function updateCommentSection(commentData) {
 
     commentElement.innerHTML = commentHTML;
     commentsContainer.appendChild(commentElement);
+    window.location.reload();
 }
 
 function formatDate(dateString) {
