@@ -4,17 +4,28 @@ var router = express.Router();
 
 // Endpoint for posting new userinfo
 router.post('/', async (req, res) => {
-    console.log("hello 4")
     try {
+        const updateFields = {};
+
+        if (req.body.preferred_name) {
+            updateFields.preferred_name = req.body.preferred_name;
+        }
+        if (req.body.pronouns) {
+            updateFields.pronouns = req.body.pronouns;
+        }
+        if (req.body.major) {
+            updateFields.major = req.body.major;
+        }
+        if (req.body.year) {
+            updateFields.year = req.body.year;
+        }
+        if (req.body.fun_fact) {
+            updateFields.fun_fact = req.body.fun_fact;
+        }
+
         await req.models.UserInfo.updateOne(
             { username: req.session.account.username },
-            {
-                preferred_name: req.body.preferred_name,
-                pronouns: req.body.pronouns,
-                major: req.body.major,
-                year: req.body.year,
-                fun_fact: req.body.fun_fact
-            },
+            { $set: updateFields },
             { upsert: true }
         );
 

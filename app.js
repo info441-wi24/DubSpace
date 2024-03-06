@@ -17,7 +17,8 @@ const authConfig = {
     clientId: "2b385243-f5ed-4139-9947-e4f97558d29f", // nic's info
     authority: "https://login.microsoftonline.com/f6b6dd5b-f02f-441a-99a0-162ac5060bd2",
     clientSecret: "tnJ8Q~GdlEnpPps6OaGT2ICEEqx4TlsJf0tBraX4",
-    redirectUri: "http://localhost:3000/redirect", //note: you can explicitly make this "localhost:3000/redirect" or "examplesite.me/redirect"
+    //redirectUri: "https://dubspace.azurewebsites.net/redirect" // for hosting
+     redirectUri: "http://localhost:3000/redirect", // for localhost
   },
   system: {
     loggerOptions: {
