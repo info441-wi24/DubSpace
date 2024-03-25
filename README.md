@@ -1,7 +1,7 @@
 # Group 6 - DubSpace
 ***Members: Ken Huang, Nic Chin, Benny Po***
 
-Deployed Website: https://dubspace.azurewebsites.net
+Deployed Website: https://dubspace.azurewebsites.net (isn't up right now due to being ran on previous quarter's azure credits)
 
 ## Project Description
 In this project, our target audience is mostly UW students. We envision that students who are looking to get other students’ opinions on classes they are interested in taking, and gain additional insight into the class from students who have previously taken the class will find our application useful. Students who wish to share their experience on a course they took will also likely have an interest in using our application.
